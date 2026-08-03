@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>سامانه مدیریت هوشمند ریاست بنیاد مسکن</title>
+
+    <script src="./chart.umd.js"></script>
+    <script src="./chartjs-plugin-datalabels.min.js"></script>
+    <script src="./apexcharts.min.js"></script>
+
+    <style>
+        @font-face {
+            font-family: Vazirmatn;
+            src: url('./Vazirmatn-Regular.woff2');
+            font-weight: 400;
+        }
+
+        @font-face {
+            font-family: Vazirmatn;
+            src: url('./Vazirmatn-Medium.woff2');
+            font-weight: 500;
+        }
+
+        @font-face {
+            font-family: Vazirmatn;
+            src: url('./Vazirmatn-Bold.woff2');
+            font-weight: 700;
+        }
+
+        :root {
+            --primary-dark: #0f172a;
+            --primary-blue: #1e3a8a;
+            --accent-gold: #b45309;
+            --bg-neutral: #f8fafc;
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            --kpi-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Vazirmatn, sans-serif;
+        }
+
+        body {
+            background: var(--bg-neutral);
+            padding: 24px;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .banner {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-blue) 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 24px;
+            box-shadow: 0 20px 25px -5px rgba(30, 58, 138, 0.3);
+            margin-bottom: 10px;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 3px solid #3b82f6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -20%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .banner-text {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+        }
+
+        .banner-card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 28px;
+            border-radius: 18px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .banner-card .bc-date {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 4px;
+            letter-spacing: -0.5px;
+        }
+
+        .banner-card .bc-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #e2e8f0;
+        }
+
+        .banner h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        .banner p {
+            opacity: 0.9;
+            font-size: 16px;
+            font-weight: 500;
+	     color: #ffffc8;
+        }
+
+        .section {
+            margin-bottom: 45px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid #e2e8f0;
+        }
+
+        .section-title {
+            color: var(--primary-dark);
+            padding: 0 0 15px 0;
+            border-bottom: 2px solid #e2e8f0;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            right: 0;
+            width: 120px;
+            height: 2px;
+            background: #2563eb;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .kpi {
+            padding: 12px;
+            border-radius: 18px;
+            border-top: 2px solid;
+
+          /*  background: #1e293b; 
+              border: 3px solid transparent;
+	       color: #ffffff;
+          */
+            color: #39019d;
+            background: linear-gradient(180deg, #faf5ff 0%, #e9d5ff 100%);
+            box-shadow: var(--kpi-shadow);
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .kpi:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.25);
+        }
+
+        .kpi h4 {
+            font-size: 16px;
+            font-weight: 600;
+            opacity: 0.95;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .kpi-icon {
+            font-size: 22px;
+        }
+
+        .kpi .value {
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .blue { border-color: #3b82f6; }
+        .green { border-color: #10b981; }
+        .orange { border-color: #f97316; }
+        .red { border-color: #ef4444; }
+        .purple { border-color: #8b5cf6; }
+        .cyan { border-color: #06b6d4; }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .chart-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+            padding-right: 10px;
+            border-right: 4px solid #3b82f6;
+        }
+
+        .chart-box {
+            height: 340px;
+            width: 100%;
+        }
+
+        canvas {
+            max-height: 340px;
+            width: 100% !important;
+        }
+
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .analysis {
+            background: #f8fafc;
+            padding: 24px;
+            border-radius: 18px;
+            border: 1px solid #edf2f7;
+            border-top: 4px solid var(--primary-blue);
+        }
+
+        .analysis h3 {
+            font-size: 16px;
+            margin-bottom: 18px;
+            color: var(--primary-blue);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .analysis-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            font-size: 22px;
+            background: #e0e7ff;
+            border: 2px solid #c7d2fe;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .analysis ul {
+            padding-right: 20px;
+            list-style-type: square;
+        }
+
+        .analysis li {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #475569;
+            text-align: justify;
+        }
+
+        .footer {
+            margin-top: 40px;
+            background: var(--primary-dark);
+            color: #e2e8f0;
+            padding: 20px;
+            text-align: center;
+            border-radius: 16px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        @media(max-width: 1024px) {
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="banner">
+        <div class="banner-text">
+            <h1>گزارش وضعیت سامانه‌های اداره‌کل حقوقی و املاک بنیاد مسکن</h1>
+            <p>درگاه خدمات قضایی (ADLIRAN) - انتشار و دسترسی آزاد به اطلاعات  (IranFoia)</p>
+        </div>
+        <div class="banner-card">
+            <div class="bc-date">16  خرداد  1405</div>
+            <div class="bc-title">اداره‌کل حوزه ریاست</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">⚖ سامانه مدیریت پرونده‌های حقوقی (ADLIRAN)</div>
+
+        <div class="kpi-grid">
+            <div class="kpi blue">
+                <h4><span class="kpi-icon">📁</span> کل پرونده‌ها</h4>
+                <div class="value">10,587</div>
+            </div>
+            <div class="kpi green">
+                <h4><span class="kpi-icon">⚖️</span> پرونده حقوقی</h4>
+                <div class="value">7,614</div>
+            </div>
+            <div class="kpi orange">
+                <h4><span class="kpi-icon">🛑</span> پرونده کیفری</h4>
+                <div class="value">739</div>
+            </div>
+            <div class="kpi cyan">
+                <h4><span class="kpi-icon">🏛️</span> دیوان عدالت</h4>
+                <div class="value">438</div>
+            </div>
+            <div class="kpi purple">
+                <h4><span class="kpi-icon">🗂️</span> مختومه</h4>
+                <div class="value">5,272</div>
+            </div>
+            <div class="kpi green">
+                <h4><span class="kpi-icon">✅</span> له بنیاد</h4>
+                <div class="value">4,750</div>
+            </div>
+            <div class="kpi red">
+                <h4><span class="kpi-icon">❌</span> علیه بنیاد</h4>
+                <div class="value">295</div>
+            </div>
+            <div class="kpi blue">
+                <h4><span class="kpi-icon">📈</span> نرخ موفقیت</h4>
+                <div class="value">94%</div>
+            </div>
+        </div>
+
+        <div class="chart-grid">
+            <div class="chart-card">
+                <div class="chart-title">ترکیب انواع پرونده‌ها</div>
+                <canvas id="caseTypeChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">۵ استان دارای بیشترین پرونده</div>
+                <div id="topProvinceChart" class="chart-box"></div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">پرونده‌های له بنیاد</div>
+                <div id="favChart" class="chart-box"></div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">پرونده‌های علیه بنیاد</div>
+                <div id="againstChart" class="chart-box"></div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">مقایسه پرونده‌های حقوقی و کیفری</div>
+                <div id="compareChart" class="chart-box"></div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">نرخ مختومه‌سازی پرونده‌ها</div>
+                <canvas id="closeChart"></canvas>
+            </div>
+        </div>
+
+        <div class="analysis-grid">
+            <div class="analysis">
+                <h3><span class="analysis-icon">📌</span> جمع‌بندی مدیریتی</h3>
+                <ul>
+                    <li>بیشتر از ۷۱ درصد پرونده‌ها ماهیت حقوقی دارند.</li>
+                    <li>اصفهان، فارس و گلستان بیشترین تمرکز پرونده‌ها را دارند.</li>
+                    <li>نسبت پرونده‌های له بنیاد به علیه بنیاد حدود 16 به 1 است.</li>
+                </ul>
+            </div>
+
+            <div class="analysis">
+                <h3><span class="analysis-icon">📊</span> تحلیل استانی</h3>
+                <ul>
+                    <li>اصفهان و فارس به دلیل جمعیت، وسعت و تعداد شهرستان‌ها دارای بار طبیعی پرونده بالاتری هستند.</li>
+                    <li>گلستان علاوه بر حجم بالا، در مختومه‌سازی نیز عملکرد برجسته‌ای دارد.</li>
+                    <li>هرمزگان و بوشهر از منظر پرونده‌های علیه بنیاد نیازمند بررسی ویژه هستند.</li>
+                    <li>کم بودن پرونده در برخی استان‌ها لزوماً نشانه عملکرد بهتر نیست.</li>
+                </ul>
+            </div>
+
+            <div class="analysis">
+                <h3><span class="analysis-icon">⚠</span> ریسک‌های شناسایی شده</h3>
+                <ul>
+                    <li>تمرکز بالای پرونده‌ها در چند استان خاص.</li>
+                    <li>افزایش دعاوی ملکی ناشی از پروژه‌های جدید.</li>
+                    <li>افزایش هزینه‌های کارشناسی و دادرسی.</li>
+                    <li>احتمال رشد پرونده‌های مرتبط با اراضی و تملک.</li>
+                </ul>
+            </div>
+
+            <div class="analysis">
+                <h3><span class="analysis-icon">🎯</span> پیشنهادهای راهبردی</h3>
+                <ul>
+                    <li>ایجاد سامانه هشدار زودهنگام دعاوی.</li>
+                    <li>رتبه‌بندی استانی بر اساس نرخ موفقیت.</li>
+                    <li>انتقال تجربیات استان‌های موفق به سایر استان‌ها.</li>
+                    <li>تمرکز ویژه بر استان‌های پرریسک جنوب کشور.</li>
+                </ul>
+            </div>
+
+            <div class="analysis">
+                <h3><span class="analysis-icon">🏆</span> نقاط قوت</h3>
+                <ul>
+                    <li>نرخ بالای موفقیت دعاوی.</li>
+                    <li>نسبت بسیار مطلوب له بنیاد به علیه بنیاد.</li>
+                    <li>سطح مناسب مختومه‌سازی پرونده‌ها.</li>
+                </ul>
+            </div>
+
+            <div class="analysis">
+                <h3><span class="analysis-icon">🔍</span> چالش‌ها</h3>
+                <ul>
+                    <li>عدم توازن حجم پرونده بین استان‌ها.</li>
+                    <li>نیاز به افزایش ظرفیت کارشناسی در استان‌های پرتراکم.</li>
+                    <li>تفاوت رویه‌های ثبت اطلاعات در برخی استان‌ها.</li>
+                    <li>لزوم یکپارچه‌سازی شاخص‌های ارزیابی عملکرد.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">📨 سامانه ملی انتشار و دسترسی آزاد به اطلاعات (IRAN FOIA)</div>
+
+        <div class="kpi-grid">
+            <div class="kpi blue">
+                <h4><span class="kpi-icon">📥</span> کل درخواست‌ها</h4>
+                <div class="value">284</div>
+            </div>
+            <div class="kpi green">
+                <h4><span class="kpi-icon">📤</span> کل پاسخ‌ها</h4>
+                <div class="value">256</div>
+            </div>
+            <div class="kpi orange">
+                <h4><span class="kpi-icon">⚠️</span> شکایات</h4>
+                <div class="value">86</div>
+            </div>
+            <div class="kpi cyan">
+                <h4><span class="kpi-icon">💬</span> پاسخ به شکایات</h4>
+                <div class="value">83</div>
+            </div>
+            <div class="kpi purple">
+                <h4><span class="kpi-icon">📊</span> نرخ پاسخگویی</h4>
+                <div class="value">90%</div>
+            </div>
+            <div class="kpi green">
+                <h4><span class="kpi-icon">🛡️</span> رسیدگی به شکایات</h4>
+                <div class="value">96%</div>
+            </div>
+        </div>
+
+        <div class="chart-grid">
+            <div class="chart-card">
+                <div class="chart-title">درخواست‌ها در استان‌های منتخب</div>
+                <div id="requestChart" class="chart-box"></div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">نرخ پاسخگویی</div>
+                <canvas id="responseChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">وضعیت شکایات</div>
+                <canvas id="complaintChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">بیشترین درخواست‌ها (تحلیل توزیع فراوانی)</div>
+                <div id="topRequestChart" class="chart-box"></div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">شاخص پاسخگویی و رسیدگی</div>
+                <div id="serviceChart" class="chart-box"></div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">عملکرد کلی سامانه</div>
+                <canvas id="foiaSummaryChart"></canvas>
+            </div>
+        </div>
+
+        <div class="analysis-grid">
+            <div class="analysis">
+                <h3><span class="analysis-icon">📌</span> جمع‌بندی مدیریتی</h3>
+                <ul>
+                    <li>حدود 90 درصد درخواست‌ها پاسخ دریافت کرده‌اند.</li>
+                    <li>بیش از 96 درصد شکایات مورد رسیدگی قرار گرفته‌اند.</li>
+                    <li>دفتر مرکزی بیشترین حجم مراجعات را به خود اختصاص داده است.</li>
+                </ul>
+            </div>
+
+            <div class="analysis">
+                <h3><span class="analysis-icon">📊</span> تحلیل عملکرد استان‌ها</h3>
+                <ul>
+                    <li>بخشی از مراجعات مردمی به جای استان‌ها مستقیماً به دفتر مرکزی ارجاع شده‌اند.</li>
+                    <li>استان‌های دارای پاسخگویی کامل می‌توانند به عنوان الگوی مدیریتی معرفی شوند.</li>
+                    <li>اختلاف قابل توجهی میان استان‌ها در میزان استفاده از سامانه مشاهده می‌شود.</li>
+                    <li>تمرکز درخواست‌ها در چند واحد خاص قابل توجه است.</li>
+                </ul>
+            </div>
+
+            <div class="analysis">
+                <h3><span class="analysis-icon">⚠</span> ریسک‌های شناسایی شده</h3>
+                <ul>
+                    <li>تأخیر در پاسخگویی برخی استان‌ها.</li>
+                    <li>احتمال افزایش شکایات ناشی از تأخیر در پاسخ.</li>
+                    <li>وابستگی زیاد متقاضیان به دفتر مرکزی.</li>
+                    <li>احتمال نارضایتی ناشی از عدم انتشار کافی اطلاعات.</li>
+                </ul>
+            </div>
+
+            <div class="analysis">
+                <h3><span class="analysis-icon">🎯</span> پیشنهادهای راهبردی</h3>
+                <ul>
+                    <li>کاهش زمان پاسخگویی استان‌های دارای تأخیر.</li>
+                    <li>افزایش انتشار پیش‌دستانه اطلاعات عمومی.</li>
+                    <li>توسعه آموزش کاربران استانی.</li>
+                    <li>ایجاد نظام رتبه‌بندی پاسخگویی استان‌ها.</li>
+                </ul>
+            </div>
+
+            <div class="analysis">
+                <h3><span class="analysis-icon">🏆</span> نقاط قوت</h3>
+                <ul>
+                    <li>نرخ مناسب پاسخگویی.</li>
+                    <li>رسیدگی گسترده به شکایات ثبت شده.</li>
+                    <li>وجود ساختار پاسخگویی منظم.</li>
+                    <li>پایش مستمر عملکرد واحدها.</li>
+                </ul>
+            </div>
+
+            <div class="analysis">
+                <h3><span class="analysis-icon">🔍</span> چالش‌های قابل بهبود</h3>
+                <ul>
+                    <li>انتشار محدود اسناد عمومی در برخی استان‌ها.</li>
+                    <li>عدم توزیع متوازن درخواست‌ها میان استان‌ها.</li>
+                    <li>طولانی بودن زمان پاسخ در برخی موارد خاص.</li>
+                    <li>نیاز به ارتقای فرهنگ شفافیت اطلاعاتی.</li>
+                </ul>
+            </div>
+
+            <div class="analysis">
+                <h3><span class="analysis-icon">📈</span> فرصت‌های توسعه</h3>
+                <ul>
+                    <li>کاهش مراجعات از طریق انتشار عمومی اطلاعات.</li>
+                    <li>افزایش اعتماد عمومی نسبت به بنیاد.</li>
+                    <li>کاهش حجم شکایات اداری.</li>
+                    <li>تقویت شاخص‌های حکمرانی و شفافیت.</li>
+                </ul>
+            </div>
+
+            <div class="analysis">
+                <h3><span class="analysis-icon">🎖</span> ارزیابی نهایی سامانه</h3>
+                <ul>
+                    <li>شاخص پاسخگویی در وضعیت مطلوب قرار دارد.</li>
+                    <li>شاخص رسیدگی به شکایات بسیار مطلوب ارزیابی می‌شود.</li>
+                    <li>ضرورت بهبود زمان پاسخگویی همچنان وجود دارد.</li>
+                    <li>تمرکز بر انتشار اسناد می‌تواند مهم‌ترین اقدام اصلاحی آینده باشد.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener("load", function () {
+
+            /* ===========================
+               CHART JS DEFAULT STYLING & DATALABELS
+            =========================== */
+            if (window.Chart) {
+                Chart.register(ChartDataLabels);
+                
+                // تنظیمات پیشفرض فونت دیتالیبل‌ها برای خوانایی بهتر رئیس بنیاد
+                Chart.defaults.set('plugins.datalabels', {
+                    color: '#ffffff',
+                    font: { weight: 'bold', family: 'Vazirmatn', size: 12 },
+                    formatter: Math.round
+                });
+
+                /* ترکیب انواع پرونده‌ها */
+                new Chart(document.getElementById("caseTypeChart"), {
+                    type: "doughnut",
+                    data: {
+                        labels: ["حقوقی", "کیفری", "دیوان عدالت", "شبه قضایی"],
+                        datasets: [{
+                            data: [7614, 739, 438, 34],
+                            backgroundColor: ['#1e40af', '#f59e0b', '#06b6d4', '#8b5cf6']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: "bottom" } }
+                    }
+                });
+
+                /* مختومه سازی */
+                new Chart(document.getElementById("closeChart"), {
+                    type: "bar",
+                    data: {
+                        labels: ["کل پرونده", "مختومه"],
+                        datasets: [{
+                            label: "تعداد",
+                            data: [10587, 5272],
+                            backgroundColor: ['#3b82f6', '#10b981'],
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { 
+                            legend: { display: false },
+                            datalabels: { anchor: 'end', align: 'top', color: '#1e293b' }
+                        },
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+
+                /* پاسخگویی */
+                new Chart(document.getElementById("responseChart"), {
+                    type: "doughnut",
+                    data: {
+                        labels: ["پاسخ داده شده", "بدون پاسخ"],
+                        datasets: [{
+                            data: [256, 28],
+                            backgroundColor: ['#10b981', '#ef4444']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: "bottom" } }
+                    }
+                });
+
+                /* شکایات */
+                new Chart(document.getElementById("complaintChart"), {
+                    type: "pie",
+                    data: {
+                        labels: ["پاسخ به شکایت", "باقیمانده"],
+                        datasets: [{
+                            data: [83, 3],
+                            backgroundColor: ['#6366f1', '#f59e0b']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: "bottom" } }
+                    }
+                });
+
+                /* عملکرد کلی FOIA */
+                new Chart(document.getElementById("foiaSummaryChart"), {
+                    type: "bar",
+                    data: {
+                        labels: ["درخواست", "پاسخ", "شکایت", "رسیدگی"],
+                        datasets: [{
+                            data: [284, 256, 86, 83],
+                            backgroundColor: ['#2563eb', '#10b981', '#f59e0b', '#8b5cf6'],
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { 
+                            legend: { display: false },
+                            datalabels: { anchor: 'end', align: 'top', color: '#1e293b' }
+                        },
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+            }
+
+            /* ===========================
+               APEX CHARTS
+            =========================== */
+            if (window.ApexCharts) {
+
+                /* ۵ استان پرتراکم */
+                new ApexCharts(document.querySelector("#topProvinceChart"), {
+                    chart: { type: "bar", height: 320, fontFamily: 'Vazirmatn', toolbar: { show: false } },
+                    colors: ['#1e3a8a'],
+                    plotOptions: { bar: { borderRadius: 6, dataLabels: { position: 'top' } } },
+                    series: [{ name: "پرونده", data: [1487, 1346, 970, 580, 550] }],
+                    xaxis: { categories: ["اصفهان", "فارس", "گلستان", "کرمان", "مرکزی"] },
+                    dataLabels: { enabled: true, offsetY: -20, style: { colors: ['#1e293b'] } }
+                }).render();
+
+                /* له بنیاد */
+                new ApexCharts(document.querySelector("#favChart"), {
+                    chart: { type: "bar", height: 320, fontFamily: 'Vazirmatn', toolbar: { show: false } },
+                    colors: ['#059669'],
+                    plotOptions: { bar: { borderRadius: 6, dataLabels: { position: 'top' } } },
+                    series: [{ name: "له بنیاد", data: [965, 390, 340, 315, 250] }],
+                    xaxis: { categories: ["گلستان", "ایلام", "بوشهر", "هرمزگان", "اصفهان"] },
+                    dataLabels: { enabled: true, offsetY: -20, style: { colors: ['#1e293b'] } }
+                }).render();
+
+                /* علیه بنیاد */
+                new ApexCharts(document.querySelector("#againstChart"), {
+                    chart: { type: "bar", height: 320, fontFamily: 'Vazirmatn', toolbar: { show: false } },
+                    colors: ['#dc2626'],
+                    plotOptions: { bar: { borderRadius: 6, dataLabels: { position: 'top' } } },
+                    series: [{ name: "علیه بنیاد", data: [91, 35, 20, 18, 16] }],
+                    xaxis: { categories: ["هرمزگان", "بوشهر", "سیستان", "کردستان", "ایلام"] },
+                    dataLabels: { enabled: true, offsetY: -20, style: { colors: ['#1e293b'] } }
+                }).render();
+
+                /* حقوقی و کیفری */
+                new ApexCharts(document.querySelector("#compareChart"), {
+                    chart: { type: "bar", height: 320, stacked: true, fontFamily: 'Vazirmatn', toolbar: { show: false } },
+                    colors: ['#2563eb', '#f59e0b'],
+                    series: [
+                        { name: "حقوقی", data: [1248, 905, 514, 395, 357] },
+                        { name: "کیفری", data: [80, 60, 45, 40, 35] }
+                    ],
+                    xaxis: { categories: ["فارس", "گلستان", "مرکزی", "خراسان رضوی", "کرمانشاه"] },
+                    dataLabels: { enabled: true, style: { colors: ['#ffffff'] } }
+                }).render();
+
+                /* درخواست‌ها در استانها */
+                new ApexCharts(document.querySelector("#requestChart"), {
+                    chart: { type: "bar", height: 320, fontFamily: 'Vazirmatn', toolbar: { show: false } },
+                    colors: ['#0891b2'],
+                    plotOptions: { bar: { borderRadius: 6, dataLabels: { position: 'top' } } },
+                    series: [{ name: "درخواست", data: [102, 33, 21, 16, 14] }],
+                    xaxis: { categories: ["دفتر مرکزی", "گیلان", "البرز", "تهران", "مازندران"] },
+                    dataLabels: { enabled: true, offsetY: -20, style: { colors: ['#1e293b'] } }
+                }).render();
+
+                /* جایگزین هوشمند نمودار عنکبوتی: نمودار افقی زیبا و لوکس */
+                new ApexCharts(document.querySelector("#topRequestChart"), {
+                    chart: { type: "bar", height: 320, fontFamily: 'Vazirmatn', toolbar: { show: false } },
+                    colors: ['#4f46e5'],
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 6,
+                            horizontal: true, 
+                            barHeight: '60%',
+                            distributed: true 
+                        }
+                    },
+                    colors: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'],
+                    series: [{ name: "درخواست", data: [102, 33, 21, 16, 14] }],
+                    xaxis: { categories: ["دفتر مرکزی", "گیلان", "البرز", "تهران", "مازندران"] },
+                    dataLabels: { 
+                        enabled: true, 
+                        align: 'right',
+                        style: { colors: ['#ffffff'], fontSize: '12px' },
+                        offsetX: 0
+                    },
+                    legend: { show: false }
+                }).render();
+
+                /* عملکرد پاسخگویی */
+                new ApexCharts(document.querySelector("#serviceChart"), {
+                    chart: { type: "radialBar", height: 320, fontFamily: 'Vazirmatn' },
+                    plotOptions: {
+                        radialBar: {
+                            dataLabels: {
+                                name: { fontSize: '16px' },
+                                value: { fontSize: '14px', formatter: function(val) { return val + '%' } },
+                                total: { show: true, label: 'میانگین کل', formatter: function() { return '93%' } }
+                            }
+                        }
+                    },
+                    series: [90, 96],
+                    labels: ["پاسخگویی", "رسیدگی شکایات"],
+                    colors: ['#06b6d4', '#10b981']
+                }).render();
+            }
+        });
+    </script>
+
+    <div class="footer">
+        اداره‌کل حوزه ریاست بنیاد مسکن انقلاب اسلامی
+    </div>
+
+</body>
+</html>

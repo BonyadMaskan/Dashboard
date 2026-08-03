@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>سامانه هوشمند مدیریتی بنیاد مسکن</title>
+
+<style>
+
+/* =========================
+   FONT
+========================= */
+
+@font-face{
+    font-family:'Vazirmatn';
+    src:url('./Vazirmatn-Regular.woff2') format('woff2');
+    font-weight:400;
+}
+
+@font-face{
+    font-family:'Vazirmatn';
+    src:url('./Vazirmatn-Bold.woff2') format('woff2');
+    font-weight:700;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Vazirmatn';
+    background:#f4f7fb;
+    color:#1e293b;
+    overflow-x:hidden;
+}
+
+/* =========================
+   HEADER / HERO
+========================= */
+
+.hero{
+    position:relative;
+    overflow:hidden;
+    padding:55px 6%;
+    background:
+    linear-gradient(135deg,#1e3a8a 0%,#2563eb 45%,#38bdf8 100%);
+    min-height:390px;
+}
+
+.hero::before{
+    content:'';
+    position:absolute;
+    width:800px;
+    height:800px;
+    background:rgba(255,255,255,0.08);
+    border-radius:50%;
+    top:-420px;
+    left:-250px;
+}
+
+.hero::after{
+    content:'';
+    position:absolute;
+    width:650px;
+    height:650px;
+    background:rgba(255,255,255,0.07);
+    border-radius:50%;
+    bottom:-340px;
+    right:-180px;
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:40px;
+    flex-wrap:wrap;
+}
+
+.hero-text{
+    flex:1;
+    min-width:320px;
+}
+
+.hero-title{
+    font-size:52px;
+    color:#fff;
+    font-weight:700;
+    line-height:1.5;
+    margin-bottom:12px;
+}
+
+.hero-subtitle{
+    font-size:24px;
+    color:#dbeafe;
+    line-height:2;
+    margin-bottom:30px;
+}
+
+.hero-badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+}
+
+.hero-badge{
+    background:rgba(255,255,255,0.15);
+    color:#fff;
+    border:1px solid rgba(255,255,255,0.15);
+    padding:13px 18px;
+    border-radius:18px;
+    backdrop-filter:blur(10px);
+    font-size:14px;
+}
+
+/* =========================
+   HERO SIDE
+========================= */
+
+.hero-panel{
+    width:380px;
+    background:rgba(255,255,255,0.14);
+    backdrop-filter:blur(14px);
+    border-radius:32px;
+    padding:28px;
+    border:1px solid rgba(255,255,255,0.12);
+    color:#fff;
+}
+
+.hero-panel h3{
+    margin-bottom:18px;
+    font-size:22px;
+}
+
+.hero-list{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+.hero-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:rgba(255,255,255,0.08);
+    border-radius:18px;
+    padding:14px;
+}
+
+.hero-item strong{
+    font-size:20px;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.container{
+    width:100%;
+    padding:45px 6%;
+}
+
+/* =========================
+   SECTION
+========================= */
+
+.section-title{
+    font-size:34px;
+    margin-bottom:30px;
+    color:#0f172a;
+    font-weight:700;
+}
+
+/* =========================
+   STATS
+========================= */
+
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:24px;
+    margin-bottom:45px;
+}
+
+.stat-card{
+    background:#fff;
+    border-radius:30px;
+    padding:28px;
+    box-shadow:0 10px 35px rgba(15,23,42,0.08);
+    position:relative;
+    overflow:hidden;
+    transition:0.3s;
+}
+
+.stat-card:hover{
+    transform:translateY(-6px);
+}
+
+.stat-card::before{
+    content:'';
+    position:absolute;
+    top:0;
+    right:0;
+    width:100%;
+    height:6px;
+    background:linear-gradient(to left,#2563eb,#06b6d4);
+}
+
+.stat-icon{
+    width:64px;
+    height:64px;
+    border-radius:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    margin-bottom:20px;
+    background:#eff6ff;
+}
+
+.stat-number{
+    font-size:42px;
+    font-weight:700;
+    color:#2563eb;
+    margin-bottom:10px;
+}
+
+.stat-label{
+    line-height:2;
+    color:#475569;
+}
+
+/* =========================
+   CHARTS
+========================= */
+
+.chart-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:30px;
+    margin-bottom:50px;
+}
+
+.chart-card{
+    background:#fff;
+    border-radius:30px;
+    padding:30px;
+    box-shadow:0 10px 35px rgba(15,23,42,0.08);
+}
+
+.chart-card h3{
+    margin-bottom:35px;
+    font-size:24px;
+}
+
+/* =========================
+   BAR CHART
+========================= */
+
+.bar-chart{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:18px;
+    height:330px;
+    padding-top:35px;
+}
+
+.bar-wrap{
+    width:100%;
+    text-align:center;
+}
+
+.bar{
+    position:relative;
+    width:100%;
+    border-radius:20px 20px 0 0;
+    background:linear-gradient(to top,#2563eb,#38bdf8);
+    box-shadow:0 10px 25px rgba(37,99,235,0.25);
+    transition:0.3s;
+}
+
+.bar:hover{
+    transform:translateY(-5px);
+}
+
+.bar-percent{
+    position:absolute;
+    top:-34px;
+    width:100%;
+    text-align:center;
+    font-weight:700;
+    color:#2563eb;
+}
+
+.bar-label{
+    margin-top:16px;
+    font-size:14px;
+    line-height:1.8;
+    color:#475569;
+}
+
+/* =========================
+   DONUT
+========================= */
+
+.donut-wrap{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:35px;
+}
+
+.donut{
+    width:240px;
+    height:240px;
+    border-radius:50%;
+    background:
+    conic-gradient(
+    #ef4444 0% 40%,
+    #f59e0b 40% 68%,
+    #10b981 68% 100%);
+    position:relative;
+    box-shadow:0 15px 40px rgba(0,0,0,0.12);
+}
+
+.donut::after{
+    content:'100%';
+    position:absolute;
+    width:130px;
+    height:130px;
+    background:#fff;
+    border-radius:50%;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:30px;
+    font-weight:700;
+    color:#0f172a;
+}
+
+.legend{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.legend-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-size:16px;
+}
+
+.legend-dot{
+    width:18px;
+    height:18px;
+    border-radius:50%;
+}
+
+/* =========================
+   REPORT CARDS
+========================= */
+
+.report-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:28px;
+}
+
+.report-card{
+    background:#fff;
+    border-radius:34px;
+    padding:34px;
+    box-shadow:0 10px 35px rgba(15,23,42,0.08);
+    transition:0.3s;
+}
+
+.report-card:hover{
+    transform:translateY(-6px);
+}
+
+.card-header{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    margin-bottom:22px;
+}
+
+.rep-avatar{
+    width:82px;
+    height:82px;
+    border-radius:24px;
+    object-fit:cover;
+    box-shadow:0 6px 20px rgba(0,0,0,0.12);
+    background:#e2e8f0;
+}
+
+.card-title h3{
+    font-size:24px;
+    margin-bottom:6px;
+}
+
+.card-title span{
+    color:#64748b;
+    font-size:14px;
+}
+
+.report-card p{
+    line-height:2.4;
+    color:#334155;
+    font-size:15px;
+}
+
+/* =========================
+   TIMELINE
+========================= */
+
+.timeline{
+    margin-top:65px;
+}
+
+.timeline-item{
+    background:#fff;
+    border-radius:30px;
+    padding:30px;
+    margin-bottom:26px;
+    border-right:7px solid #2563eb;
+    box-shadow:0 10px 35px rgba(15,23,42,0.08);
+}
+
+.timeline-date{
+    color:#2563eb;
+    font-weight:700;
+    margin-bottom:12px;
+    font-size:18px;
+}
+
+.timeline-item h4{
+    margin-bottom:15px;
+    font-size:24px;
+}
+
+.timeline-item p{
+    line-height:2.4;
+    color:#334155;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer{
+    margin-top:70px;
+    background:#0f172a;
+    color:#cbd5e1;
+    text-align:center;
+    padding:40px;
+    line-height:2.2;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:1200px){
+
+.stats-grid{
+    grid-template-columns:repeat(2,1fr);
+}
+
+.chart-grid{
+    grid-template-columns:1fr;
+}
+
+.report-grid{
+    grid-template-columns:1fr;
+}
+
+}
+
+@media(max-width:768px){
+
+.hero-title{
+    font-size:34px;
+}
+
+.hero-subtitle{
+    font-size:18px;
+}
+
+.stats-grid{
+    grid-template-columns:1fr;
+}
+
+.container{
+    padding:30px;
+}
+
+.bar-chart{
+    height:260px;
+}
+
+.card-header{
+    flex-direction:column;
+    align-items:flex-start;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     HERO
+========================= -->
+
+<section class="hero">
+
+<div class="hero-content">
+
+<div class="hero-text">
+
+<h1 class="hero-title">
+سامانه هوشمند مدیریتی بنیاد مسکن
+</h1>
+
+<div class="hero-subtitle">
+تحلیل پارلمانی و مواضع نمایندگان مجلس
+<br>
+رصد جریان‌های سیاسی، نظارتی و رسانه‌ای پیرامون بنیاد مسکن انقلاب اسلامی
+</div>
+
+<div class="hero-badges">
+
+<div class="hero-badge">
+تحلیل بازه آذر ۱۴۰۴ تا اردیبهشت ۱۴۰۵
+</div>
+
+<div class="hero-badge">
+پایش کمیسیون عمران و فضای نظارتی مجلس
+</div>
+
+<div class="hero-badge">
+تحلیل رفتار نمایندگان مناطق روستایی و بحران‌زده
+</div>
+
+</div>
+
+</div>
+
+<div class="hero-panel">
+
+<h3>
+📊 جمع‌بندی سریع فضای مجلس
+</h3>
+
+<div class="hero-list">
+
+<div class="hero-item">
+<span>انتقاد از طرح هادی</span>
+<strong>68%</strong>
+</div>
+
+<div class="hero-item">
+<span>مطالبه شفافیت و نظارت</span>
+<strong>52%</strong>
+</div>
+
+<div class="hero-item">
+<span>حمایت از حفظ ساختار بنیاد</span>
+<strong>74%</strong>
+</div>
+
+<div class="hero-item">
+<span>رضایت از بازسازی بحران‌ها</span>
+<strong>81%</strong>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- =========================
+     CONTENT
+========================= -->
+
+<div class="container">
+
+<h2 class="section-title">
+نمای کلی فضای سیاسی مجلس
+</h2>
+
+<div class="stats-grid">
+
+<div class="stat-card">
+<div class="stat-icon">🏘️</div>
+<div class="stat-number">68%</div>
+<div class="stat-label">
+بیشترین محور انتقادات نمایندگان مربوط به طرح هادی، توسعه روستایی و محدودیت‌های ساخت‌وساز است.
+</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-icon">⚖️</div>
+<div class="stat-number">52%</div>
+<div class="stat-label">
+موضوعات شفافیت مالی، منابع و مصارف و تحقیق و تفحص در ماه‌های اخیر رشد قابل توجهی داشته است.
+</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-icon">🛡️</div>
+<div class="stat-number">74%</div>
+<div class="stat-label">
+اکثریت مجلس همچنان مخالف تضعیف یا ادغام بنیاد بوده و بر حفظ ساختار نهادی آن تأکید دارند.
+</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-icon">🚧</div>
+<div class="stat-number">81%</div>
+<div class="stat-label">
+عملکرد بنیاد در بازسازی بحران‌ها، ارزیابی خسارات و حضور میدانی همچنان دارای سرمایه سیاسی مثبت است.
+</div>
+</div>
+
+</div>
+
+<!-- =========================
+     CHARTS
+========================= -->
+
+<div class="chart-grid">
+
+<div class="chart-card">
+
+<h3>
+📈 محورهای انتقادی نمایندگان
+</h3>
+
+<div class="bar-chart">
+
+<div class="bar-wrap">
+<div class="bar" style="height:88%;">
+<div class="bar-percent">88%</div>
+</div>
+<div class="bar-label">
+طرح هادی
+</div>
+</div>
+
+<div class="bar-wrap">
+<div class="bar" style="height:72%;">
+<div class="bar-percent">72%</div>
+</div>
+<div class="bar-label">
+بروکراسی و استعلامات
+</div>
+</div>
+
+<div class="bar-wrap">
+<div class="bar" style="height:58%;">
+<div class="bar-percent">58%</div>
+</div>
+<div class="bar-label">
+تحقیق و تفحص
+</div>
+</div>
+
+<div class="bar-wrap">
+<div class="bar" style="height:46%;">
+<div class="bar-percent">46%</div>
+</div>
+<div class="bar-label">
+منابع و مصارف
+</div>
+</div>
+
+<div class="bar-wrap">
+<div class="bar" style="height:79%;">
+<div class="bar-percent">79%</div>
+</div>
+<div class="bar-label">
+توسعه روستا
+</div>
+</div>
+
+</div>
+
+</div>
+
+<div class="chart-card">
+
+<h3>
+🧭 ترکیب فضای سیاسی مجلس
+</h3>
+
+<div class="donut-wrap">
+
+<div class="donut"></div>
+
+<div class="legend">
+
+<div class="legend-item">
+<div class="legend-dot" style="background:#ef4444"></div>
+<div>
+منتقدان ساختاری و فرآیندی — 40%
+</div>
+</div>
+
+<div class="legend-item">
+<div class="legend-dot" style="background:#f59e0b"></div>
+<div>
+منتقدان اجرایی — 28%
+</div>
+</div>
+
+<div class="legend-item">
+<div class="legend-dot" style="background:#10b981"></div>
+<div>
+حامیان نهادی بنیاد — 32%
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- =========================
+     REPORTS
+========================= -->
+
+<h2 class="section-title">
+تحلیل جریان‌های پارلمانی
+</h2>
+
+<div class="report-grid">
+
+<div class="report-card">
+
+<div class="card-header">
+
+<img src="Zangene.jpg"
+class="rep-avatar"
+onerror="this.src='default-user.png'">
+
+<div class="card-title">
+<h3>
+جریان نقد ساختاری و نظارتی
+</h3>
+<span>
+محوریت: محسن زنگنه
+</span>
+</div>
+
+</div>
+
+<p>
+این جریان در اواخر سال ۱۴۰۴ انتقادها را از سطح مشکلات اجرایی به سطح مأموریتی و هویتی منتقل کرد.
+موضوع تحقیق و تفحص، شفافیت منابع و مصارف، نحوه مدیریت اراضی روستایی و فاصله گرفتن بنیاد از مأموریت محرومیت‌زدایی، مهم‌ترین محورهای این طیف محسوب می‌شود.
+این جریان از ظرفیت بالای رسانه‌ای و همراه‌سازی نمایندگان برخوردار است.
+</p>
+
+</div>
+
+<div class="report-card">
+
+<div class="card-header">
+
+<img src="RahmatZadeh.jpg"
+class="rep-avatar"
+onerror="this.src='default-user.png'">
+
+<div class="card-title">
+<h3>
+جبهه فشار جغرافیایی شمال کشور
+</h3>
+<span>
+رحمت‌زاده، ایری و شریعتی
+</span>
+</div>
+
+</div>
+
+<p>
+نمایندگان گیلان، گلستان و مازندران بیشترین فشار را بر موضوع طرح هادی، الحاق به محدوده و تغییر کاربری وارد کرده‌اند.
+در این مناطق، مسئله از سطح فنی خارج شده و به مطالبه اجتماعی و معیشتی روستاییان تبدیل شده است.
+تقارب مواضع این نمایندگان نشان‌دهنده شکل‌گیری یک بلوک رأی نسبتاً هماهنگ علیه بروکراسی طرح‌های هادی است.
+</p>
+
+</div>
+
+<div class="report-card">
+
+<div class="card-header">
+
+<img src="Zarei.jpg"
+class="rep-avatar"
+onerror="this.src='default-user.png'">
+
+<div class="card-title">
+<h3>
+جریان مدافعان نهادی بنیاد
+</h3>
+<span>
+محوریت: غلامحسین زارعی
+</span>
+</div>
+
+</div>
+
+<p>
+این جریان با هرگونه ادغام یا تضعیف بنیاد مخالفت کرده و بر حفظ ماهیت جهادی و مردمی بنیاد تأکید دارد.
+نمایندگان این طیف معتقدند که بنیاد هنوز مهم‌ترین نهاد عملیاتی کشور در حوزه محرومیت‌زدایی و بازسازی محسوب می‌شود و تضعیف آن تبعات گسترده‌ای برای مناطق محروم خواهد داشت.
+</p>
+
+</div>
+
+<div class="report-card">
+
+<div class="card-header">
+
+<img src="HoseinPour.jpg"
+class="rep-avatar"
+onerror="this.src='default-user.png'">
+
+<div class="card-title">
+<h3>
+مطالبه‌گران اجرایی و بازسازی
+</h3>
+<span>
+حسین‌پور و نمایندگان مناطق بحران‌زده
+</span>
+</div>
+
+</div>
+
+<p>
+در مناطق بحران‌زده و مرزی، نگاه نمایندگان نسبت به عملکرد بنیاد عمدتاً مثبت است.
+مطالبات این طیف بیشتر بر افزایش اعتبارات، سرعت بازسازی، تسهیل پرداخت تسهیلات و توسعه خدمات اجرایی متمرکز است.
+عملکرد بنیاد در ارزیابی خسارات و حضور میدانی همچنان برای این مناطق سرمایه سیاسی مهمی محسوب می‌شود.
+</p>
+
+</div>
+
+<div class="report-card">
+
+<div class="card-header">
+
+<img src="Eyri.jpg"
+class="rep-avatar"
+onerror="this.src='default-user.png'">
+
+<div class="card-title">
+<h3>
+تحلیل اصطکاک‌های اجتماعی طرح هادی
+</h3>
+<span>
+محوریت: عبدالجلال ایری
+</span>
+</div>
+
+</div>
+
+<p>
+موضوع طرح هادی در شمال کشور به یک بحران صرفاً فنی محدود نمانده و اکنون بخشی از نارضایتی‌های اجتماعی و اقتصادی روستاها را نمایندگی می‌کند.
+نمایندگان این مناطق معتقدند سخت‌گیری در توسعه روستاها، فشار معیشتی و کاهش امکان مهاجرت معکوس را تشدید کرده است.
+</p>
+
+</div>
+
+<div class="report-card">
+
+<div class="card-header">
+
+<img src="Shahryari.jpg"
+class="rep-avatar"
+onerror="this.src='default-user.png'">
+
+<div class="card-title">
+<h3>
+انتقادهای اجرایی و پروژه‌ای
+</h3>
+<span>
+محوریت: محمدمهدی شهریاری
+</span>
+</div>
+
+</div>
+
+<p>
+در شرق و شمال شرق کشور، بخش مهمی از انتقادها متوجه کندی پروژه‌های روستایی، فرآیندهای اداری طولانی و زمان اجرای طرح‌هاست.
+این طیف ضمن حمایت از اصل مأموریت بنیاد، خواهان افزایش چابکی اجرایی و کاهش زمان پاسخگویی هستند.
+</p>
+
+</div>
+
+</div>
+
+<!-- =========================
+     TIMELINE
+========================= -->
+
+<div class="timeline">
+
+<h2 class="section-title">
+خط زمانی تحولات سیاسی مجلس
+</h2>
+
+<div class="timeline-item">
+
+<div class="timeline-date">
+آذر ۱۴۰۴
+</div>
+
+<h4>
+شروع موج انتقادهای اجتماعی
+</h4>
+
+<p>
+سعید رحمت‌زاده مسئله طرح هادی را به عنوان «گره زندگی روستاییان» مطرح کرد.
+این نقطه آغاز تمرکز رسانه‌ای مجلس بر اصطکاک‌های اجتماعی بنیاد محسوب می‌شود.
+</p>
+
+</div>
+
+<div class="timeline-item">
+
+<div class="timeline-date">
+دی ۱۴۰۴
+</div>
+
+<h4>
+تثبیت فشار شمال کشور
+</h4>
+
+<p>
+عبدالجلال ایری و غلامرضا شریعتی موضوع محدودیت توسعه روستاها و سخت‌گیری استعلامات را وارد جلسات تخصصی و رسانه‌های استانی کردند.
+</p>
+
+</div>
+
+<div class="timeline-item">
+
+<div class="timeline-date">
+اسفند ۱۴۰۴
+</div>
+
+<h4>
+ورود رسمی مجلس به فاز نظارتی
+</h4>
+
+<p>
+محسن زنگنه موضوع تحقیق و تفحص از بنیاد را کلید زد و فضای انتقادی را از سطح اجرایی به سطح ساختاری و هویتی منتقل کرد.
+</p>
+
+</div>
+
+<div class="timeline-item">
+
+<div class="timeline-date">
+اردیبهشت ۱۴۰۵
+</div>
+
+<h4>
+تقابل دو روایت در مجلس
+</h4>
+
+<p>
+همزمان با تشدید انتقادها، جریان مدافعان نهادی بنیاد نیز فعال شد و مخالفت با ادغام یا تضعیف ساختار بنیاد را وارد فضای رسانه‌ای و سیاسی مجلس کرد.
+</p>
+
+</div>
+
+</div>
+
+<div class="footer">
+
+سامانه هوشمند مدیریتی بنیاد مسکن<br>
+تحلیل پارلمانی و مواضع نمایندگان مجلس شورای اسلامی
+
+</div>
+
+</div>
+
+</body>
+</html>

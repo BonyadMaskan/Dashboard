@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>
+داشبورد مدیریتی اداره کل حقوقی و املاک بنیاد مسکن
+</title>
+
+<script src="./chart.umd.js"></script>
+<script src="./chartjs-plugin-datalabels.min.js"></script>
+<script src="./apexcharts.min.js"></script>
+
+<style>
+
+@font-face{
+font-family:Vazirmatn;
+src:url('./Vazirmatn-Regular.woff2');
+font-weight:400;
+}
+
+@font-face{
+font-family:Vazirmatn;
+src:url('./Vazirmatn-Medium.woff2');
+font-weight:500;
+}
+
+@font-face{
+font-family:Vazirmatn;
+src:url('./Vazirmatn-Bold.woff2');
+font-weight:700;
+}
+
+:root{
+
+--blue:#1e40af;
+--cyan:#0891b2;
+--green:#10b981;
+--orange:#f59e0b;
+--red:#ef4444;
+--purple:#7c3aed;
+
+--bg:#eef2f7;
+--card:#ffffff;
+
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Vazirmatn;
+}
+
+body{
+
+background:var(--bg);
+
+padding:18px;
+
+}
+
+.banner{
+
+background:
+linear-gradient(
+135deg,
+#0f172a,
+#1e3a8a
+);
+
+color:white;
+
+padding:25px;
+
+border-radius:24px;
+
+box-shadow:0 10px 35px rgba(0,0,0,.18);
+
+margin-bottom:20px;
+
+}
+
+.banner h1{
+
+font-size:30px;
+margin-bottom:10px;
+
+}
+
+.banner p{
+
+opacity:.9;
+
+}
+
+.section{
+
+margin-top:20px;
+
+}
+
+.section-title{
+
+background:white;
+
+padding:15px 20px;
+
+border-right:8px solid #1e40af;
+
+border-radius:16px;
+
+font-size:22px;
+font-weight:700;
+
+margin-bottom:15px;
+
+}
+
+.kpi-grid{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(180px,1fr));
+
+gap:12px;
+
+margin-bottom:18px;
+
+}
+
+.kpi{
+
+padding:18px;
+
+border-radius:18px;
+
+color:white;
+
+box-shadow:0 8px 20px rgba(0,0,0,.10);
+
+}
+
+.kpi h4{
+
+font-size:13px;
+
+margin-bottom:10px;
+
+}
+
+.kpi .value{
+
+font-size:28px;
+
+font-weight:700;
+
+}
+
+.blue{
+background:linear-gradient(135deg,#2563eb,#1d4ed8);
+}
+
+.green{
+background:linear-gradient(135deg,#10b981,#059669);
+}
+
+.orange{
+background:linear-gradient(135deg,#f59e0b,#d97706);
+}
+
+.red{
+background:linear-gradient(135deg,#ef4444,#dc2626);
+}
+
+.purple{
+background:linear-gradient(135deg,#8b5cf6,#7c3aed);
+}
+
+.cyan{
+background:linear-gradient(135deg,#06b6d4,#0891b2);
+}
+
+.chart-grid{
+
+display:grid;
+
+grid-template-columns:1fr 1fr;
+
+gap:15px;
+
+}
+
+.chart-card{
+
+background:white;
+
+border-radius:18px;
+
+padding:15px;
+
+box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+}
+
+.chart-title{
+
+font-weight:700;
+
+margin-bottom:10px;
+
+}
+
+.chart-box{
+
+height:340px;
+
+}
+
+.analysis-grid{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(300px,1fr));
+
+gap:15px;
+
+margin-top:15px;
+
+}
+
+.analysis{
+
+background:white;
+
+padding:18px;
+
+border-radius:18px;
+
+box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+}
+
+.analysis h3{
+
+margin-bottom:12px;
+
+color:#1e40af;
+
+}
+
+.analysis ul{
+
+padding-right:18px;
+
+line-height:2;
+
+}
+
+.footer{
+
+margin-top:25px;
+
+background:white;
+
+padding:15px;
+
+text-align:center;
+
+border-radius:16px;
+
+font-weight:700;
+
+}
+
+@media(max-width:1000px){
+
+.chart-grid{
+
+grid-template-columns:1fr;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="banner">
+
+<h1>
+🏛 داشبورد مدیریتی اداره کل حقوقی و املاک بنیاد مسکن
+</h1>
+
+<p>
+گزارش عملکرد سامانه ADLIRAN و سامانه انتشار و دسترسی آزاد به اطلاعات
+</p>
+
+</div>
+<!-- ========================= -->
+<!-- ADLIRAN -->
+<!-- ========================= -->
+
+<div class="section">
+
+<div class="section-title">
+⚖ سامانه مدیریت پرونده‌های حقوقی (ADLIRAN)
+</div>
+
+<div class="kpi-grid">
+
+<div class="kpi blue">
+<h4>کل پرونده‌ها</h4>
+<div class="value">10,587</div>
+</div>
+
+<div class="kpi green">
+<h4>پرونده حقوقی</h4>
+<div class="value">7,614</div>
+</div>
+
+<div class="kpi orange">
+<h4>پرونده کیفری</h4>
+<div class="value">739</div>
+</div>
+
+<div class="kpi cyan">
+<h4>دیوان عدالت</h4>
+<div class="value">438</div>
+</div>
+
+<div class="kpi purple">
+<h4>مختومه</h4>
+<div class="value">5,272</div>
+</div>
+
+<div class="kpi green">
+<h4>له بنیاد</h4>
+<div class="value">4,750</div>
+</div>
+
+<div class="kpi red">
+<h4>علیه بنیاد</h4>
+<div class="value">295</div>
+</div>
+
+<div class="kpi blue">
+<h4>نرخ موفقیت</h4>
+<div class="value">94%</div>
+</div>
+
+</div>
+
+<div class="chart-grid">
+
+<div class="chart-card">
+
+<div class="chart-title">
+ترکیب انواع پرونده‌ها
+</div>
+
+<canvas id="caseTypeChart"></canvas>
+
+</div>
+
+<div class="chart-card">
+
+<div class="chart-title">
+۵ استان دارای بیشترین پرونده
+</div>
+
+<div id="topProvinceChart" class="chart-box"></div>
+
+</div>
+
+<div class="chart-card">
+
+<div class="chart-title">
+پرونده‌های له بنیاد
+</div>
+
+<div id="favChart" class="chart-box"></div>
+
+</div>
+
+<div class="chart-card">
+
+<div class="chart-title">
+پرونده‌های علیه بنیاد
+</div>
+
+<div id="againstChart" class="chart-box"></div>
+
+</div>
+
+<div class="chart-card">
+
+<div class="chart-title">
+مقایسه پرونده‌های حقوقی و کیفری
+</div>
+
+<div id="compareChart" class="chart-box"></div>
+
+</div>
+
+<div class="chart-card">
+
+<div class="chart-title">
+نرخ مختومه‌سازی پرونده‌ها
+</div>
+
+<canvas id="closeChart"></canvas>
+
+</div>
+
+</div>
+
+<div class="analysis-grid">
+
+<div class="analysis">
+
+<h3>
+📌 جمع‌بندی مدیریتی
+</h3>
+
+<ul>
+
+<li>
+بیش از ۷۱ درصد پرونده‌ها ماهیت حقوقی دارند.
+</li>
+
+<li>
+اصفهان، فارس و گلستان بیشترین تمرکز پرونده‌ها را دارند.
+</li>
+
+<li>
+نسبت پرونده‌های له بنیاد به علیه بنیاد حدود 16 به 1 است.
+</li>
+
+<li>
+عملکرد کلی واحدهای حقوقی در دفاع از منافع بنیاد مطلوب ارزیابی می‌شود.
+</li>
+
+</ul>
+
+</div>
+
+<div class="analysis">
+
+<h3>
+📊 تحلیل استانی
+</h3>
+
+<ul>
+
+<li>
+اصفهان و فارس به دلیل جمعیت، وسعت و تعداد شهرستان‌ها دارای بار طبیعی پرونده بالاتری هستند.
+</li>
+
+<li>
+گلستان علاوه بر حجم بالا، در مختومه‌سازی نیز عملکرد برجسته‌ای دارد.
+</li>
+
+<li>
+هرمزگان و بوشهر از منظر پرونده‌های علیه بنیاد نیازمند بررسی ویژه هستند.
+</li>
+
+<li>
+کم بودن پرونده در برخی استان‌ها لزوماً نشانه عملکرد بهتر نیست.
+</li>
+
+</ul>
+
+</div>
+
+<div class="analysis">
+
+<h3>
+⚠ ریسک‌های شناسایی شده
+</h3>
+
+<ul>
+
+<li>
+تمرکز بالای پرونده‌ها در چند استان خاص.
+</li>
+
+<li>
+افزایش دعاوی ملکی ناشی از پروژه‌های جدید.
+</li>
+
+<li>
+افزایش هزینه‌های کارشناسی و دادرسی.
+</li>
+
+<li>
+احتمال رشد پرونده‌های مرتبط با اراضی و تملک.
+</li>
+
+</ul>
+
+</div>
+
+<div class="analysis">
+
+<h3>
+🎯 پیشنهادهای راهبردی
+</h3>
+
+<ul>
+
+<li>
+ایجاد سامانه هشدار زودهنگام دعاوی.
+</li>
+
+<li>
+رتبه‌بندی استانی بر اساس نرخ موفقیت.
+</li>
+
+<li>
+انتقال تجربیات استان‌های موفق به سایر استان‌ها.
+</li>
+
+<li>
+تمرکز ویژه بر استان‌های پرریسک جنوب کشور.
+</li>
+
+</ul>
+
+</div>
+
+<div class="analysis">
+
+<h3>
+🏆 نقاط قوت
+</h3>
+
+<ul>
+
+<li>
+نرخ بالای موفقیت دعاوی.
+</li>
+
+<li>
+نسبت بسیار مطلوب له بنیاد به علیه بنیاد.
+</li>
+
+<li>
+سطح مناسب مختومه‌سازی پرونده‌ها.
+</li>
+
+<li>
+کنترل مناسب پرونده‌های دیوان عدالت اداری.
+</li>
+
+</ul>
+
+</div>
+
+<div class="analysis">
+
+<h3>
+🔍 چالش‌ها
+</h3>
+
+<ul>
+
+<li>
+عدم توازن حجم پرونده بین استان‌ها.
+</li>
+
+<li>
+نیاز به افزایش ظرفیت کارشناسی در استان‌های پرتراکم.
+</li>
+
+<li>
+تفاوت رویه‌های ثبت اطلاعات در برخی استان‌ها.
+</li>
+
+<li>
+لزوم یکپارچه‌سازی شاخص‌های ارزیابی عملکرد.
+</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+<!-- ========================= -->
+<!-- IRAN FOIA -->
+<!-- ========================= -->
+
+<div class="section">
+
+<div class="section-title">
+📨 سامانه ملی انتشار و دسترسی آزاد به اطلاعات (IRAN FOIA)
+</div>
+
+<div class="kpi-grid">
+
+<div class="kpi blue">
+<h4>کل درخواست‌ها</h4>
+<div class="value">284</div>
+</div>
+
+<div class="kpi green">
+<h4>کل پاسخ‌ها</h4>
+<div class="value">256</div>
+</div>
+
+<div class="kpi orange">
+<h4>شکایات</h4>
+<div class="value">86</div>
+</div>
+
+<div class="kpi cyan">
+<h4>پاسخ به شکایات</h4>
+<div class="value">83</div>
+</div>
+
+<div class="kpi purple">
+<h4>نرخ پاسخگویی</h4>
+<div class="value">90%</div>
+</div>
+
+<div class="kpi green">
+<h4>رسیدگی به شکایات</h4>
+<div class="value">96%</div>
+</div>
+
+</div>
+
+<div class="chart-grid">
+
+<div class="chart-card">
+
+<div class="chart-title">
+درخواست‌ها در استان‌های منتخب
+</div>
+
+<div id="requestChart" class="chart-box"></div>
+
+</div>
+
+<div class="chart-card">
+
+<div class="chart-title">
+نرخ پاسخگویی
+</div>
+
+<canvas id="responseChart"></canvas>
+
+</div>
+
+<div class="chart-card">
+
+<div class="chart-title">
+وضعیت شکایات
+</div>
+
+<canvas id="complaintChart"></canvas>
+
+</div>
+
+<div class="chart-card">
+
+<div class="chart-title">
+بیشترین درخواست‌ها
+</div>
+
+<div id="topRequestChart" class="chart-box"></div>
+
+</div>
+
+<div class="chart-card">
+
+<div class="chart-title">
+شاخص پاسخگویی و رسیدگی
+</div>
+
+<div id="serviceChart" class="chart-box"></div>
+
+</div>
+
+<div class="chart-card">
+
+<div class="chart-title">
+عملکرد کلی سامانه
+</div>
+
+<canvas id="foiaSummaryChart"></canvas>
+
+</div>
+
+</div>
+
+<div class="analysis-grid">
+
+<div class="analysis">
+
+<h3>
+📌 جمع‌بندی مدیریتی
+</h3>
+
+<ul>
+
+<li>
+حدود 90 درصد درخواست‌ها پاسخ دریافت کرده‌اند.
+</li>
+
+<li>
+بیش از 96 درصد شکایات مورد رسیدگی قرار گرفته‌اند.
+</li>
+
+<li>
+دفتر مرکزی بیشترین حجم مراجعات را به خود اختصاص داده است.
+</li>
+
+<li>
+عملکرد کلی سامانه در حوزه پاسخگویی قابل قبول ارزیابی می‌شود.
+</li>
+
+</ul>
+
+</div>
+
+<div class="analysis">
+
+<h3>
+📊 تحلیل عملکرد استان‌ها
+</h3>
+
+<ul>
+
+<li>
+بخشی از مراجعات مردمی به جای استان‌ها مستقیماً به دفتر مرکزی ارجاع شده‌اند.
+</li>
+
+<li>
+استان‌های دارای پاسخگویی کامل می‌توانند به عنوان الگوی مدیریتی معرفی شوند.
+</li>
+
+<li>
+اختلاف قابل توجهی میان استان‌ها در میزان استفاده از سامانه مشاهده می‌شود.
+</li>
+
+<li>
+تمرکز درخواست‌ها در چند واحد خاص قابل توجه است.
+</li>
+
+</ul>
+
+</div>
+
+<div class="analysis">
+
+<h3>
+⚠ ریسک‌های شناسایی شده
+</h3>
+
+<ul>
+
+<li>
+تأخیر در پاسخگویی برخی استان‌ها.
+</li>
+
+<li>
+احتمال افزایش شکایات ناشی از تأخیر در پاسخ.
+</li>
+
+<li>
+وابستگی زیاد متقاضیان به دفتر مرکزی.
+</li>
+
+<li>
+احتمال نارضایتی ناشی از عدم انتشار کافی اطلاعات.
+</li>
+
+</ul>
+
+</div>
+
+<div class="analysis">
+
+<h3>
+🎯 پیشنهادهای راهبردی
+</h3>
+
+<ul>
+
+<li>
+کاهش زمان پاسخگویی استان‌های دارای تأخیر.
+</li>
+
+<li>
+افزایش انتشار پیش‌دستانه اطلاعات عمومی.
+</li>
+
+<li>
+توسعه آموزش کاربران استانی.
+</li>
+
+<li>
+ایجاد نظام رتبه‌بندی پاسخگویی استان‌ها.
+</li>
+
+</ul>
+
+</div>
+
+<div class="analysis">
+
+<h3>
+🏆 نقاط قوت
+</h3>
+
+<ul>
+
+<li>
+نرخ مناسب پاسخگویی.
+</li>
+
+<li>
+رسیدگی گسترده به شکایات ثبت شده.
+</li>
+
+<li>
+وجود ساختار پاسخگویی منظم.
+</li>
+
+<li>
+پایش مستمر عملکرد واحدها.
+</li>
+
+</ul>
+
+</div>
+
+<div class="analysis">
+
+<h3>
+🔍 چالش‌های قابل بهبود
+</h3>
+
+<ul>
+
+<li>
+انتشار محدود اسناد عمومی در برخی استان‌ها.
+</li>
+
+<li>
+عدم توزیع متوازن درخواست‌ها میان استان‌ها.
+</li>
+
+<li>
+طولانی بودن زمان پاسخ در برخی موارد خاص.
+</li>
+
+<li>
+نیاز به ارتقای فرهنگ شفافیت اطلاعاتی.
+</li>
+
+</ul>
+
+</div>
+
+<div class="analysis">
+
+<h3>
+📈 فرصت‌های توسعه
+</h3>
+
+<ul>
+
+<li>
+کاهش مراجعات از طریق انتشار عمومی اطلاعات.
+</li>
+
+<li>
+افزایش اعتماد عمومی نسبت به بنیاد.
+</li>
+
+<li>
+کاهش حجم شکایات اداری.
+</li>
+
+<li>
+تقویت شاخص‌های حکمرانی و شفافیت.
+</li>
+
+</ul>
+
+</div>
+
+<div class="analysis">
+
+<h3>
+🎖 ارزیابی نهایی سامانه
+</h3>
+
+<ul>
+
+<li>
+شاخص پاسخگویی در وضعیت مطلوب قرار دارد.
+</li>
+
+<li>
+شاخص رسیدگی به شکایات بسیار مطلوب ارزیابی می‌شود.
+</li>
+
+<li>
+ضرورت بهبود زمان پاسخگویی همچنان وجود دارد.
+</li>
+
+<li>
+تمرکز بر انتشار اسناد می‌تواند مهم‌ترین اقدام اصلاحی آینده باشد.
+</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+window.addEventListener("load", function(){
+
+/* ===========================
+   CHART JS
+=========================== */
+
+if(window.Chart){
+
+Chart.register(ChartDataLabels);
+
+/* پرونده ها */
+
+new Chart(
+document.getElementById("caseTypeChart"),
+{
+type:"doughnut",
+data:{
+labels:[
+"حقوقی",
+"کیفری",
+"دیوان عدالت",
+"شبه قضایی"
+],
+datasets:[{
+data:[
+7614,
+739,
+438,
+34
+]
+}]
+},
+options:{
+responsive:true,
+plugins:{
+legend:{
+position:"bottom"
+},
+datalabels:{
+color:"#fff",
+font:{
+weight:"bold"
+}
+}
+}
+}
+});
+
+/* مختومه سازی */
+
+new Chart(
+document.getElementById("closeChart"),
+{
+type:"bar",
+data:{
+labels:[
+"کل پرونده",
+"مختومه"
+],
+datasets:[{
+label:"تعداد",
+data:[
+10587,
+5272
+]
+}]
+},
+options:{
+responsive:true,
+plugins:{
+legend:{
+display:false
+}
+}
+}
+});
+
+/* پاسخگویی */
+
+new Chart(
+document.getElementById("responseChart"),
+{
+type:"doughnut",
+data:{
+labels:[
+"پاسخ داده شده",
+"بدون پاسخ"
+],
+datasets:[{
+data:[
+256,
+28
+]
+}]
+},
+options:{
+plugins:{
+legend:{
+position:"bottom"
+}
+}
+}
+});
+
+/* شکایات */
+
+new Chart(
+document.getElementById("complaintChart"),
+{
+type:"pie",
+data:{
+labels:[
+"پاسخ به شکایت",
+"باقیمانده"
+],
+datasets:[{
+data:[
+83,
+3
+]
+}]
+},
+options:{
+plugins:{
+legend:{
+position:"bottom"
+}
+}
+}
+});
+
+/* عملکرد کلی FOIA */
+
+new Chart(
+document.getElementById("foiaSummaryChart"),
+{
+type:"bar",
+data:{
+labels:[
+"درخواست",
+"پاسخ",
+"شکایت",
+"رسیدگی"
+],
+datasets:[{
+data:[
+284,
+256,
+86,
+83
+]
+}]
+},
+options:{
+plugins:{
+legend:{
+display:false
+}
+}
+}
+});
+
+}
+
+/* ===========================
+   APEX CHARTS
+=========================== */
+
+if(window.ApexCharts){
+
+/* استان های پرتراکم */
+
+new ApexCharts(
+document.querySelector("#topProvinceChart"),
+{
+chart:{
+type:"bar",
+height:320,
+toolbar:{
+show:false
+}
+},
+series:[{
+name:"پرونده",
+data:[
+1487,
+1346,
+970,
+580,
+550
+]
+}],
+xaxis:{
+categories:[
+"اصفهان",
+"فارس",
+"گلستان",
+"کرمان",
+"مرکزی"
+]
+},
+dataLabels:{
+enabled:true
+}
+}
+).render();
+
+/* له بنیاد */
+
+new ApexCharts(
+document.querySelector("#favChart"),
+{
+chart:{
+type:"bar",
+height:320
+},
+series:[{
+name:"له بنیاد",
+data:[
+965,
+390,
+340,
+315,
+250
+]
+}],
+xaxis:{
+categories:[
+"گلستان",
+"ایلام",
+"بوشهر",
+"هرمزگان",
+"اصفهان"
+]
+},
+dataLabels:{
+enabled:true
+}
+}
+).render();
+
+/* علیه بنیاد */
+
+new ApexCharts(
+document.querySelector("#againstChart"),
+{
+chart:{
+type:"bar",
+height:320
+},
+series:[{
+name:"علیه بنیاد",
+data:[
+91,
+35,
+20,
+18,
+16
+]
+}],
+xaxis:{
+categories:[
+"هرمزگان",
+"بوشهر",
+"سیستان",
+"کردستان",
+"ایلام"
+]
+},
+dataLabels:{
+enabled:true
+}
+}
+).render();
+
+/* حقوقی و کیفری */
+
+new ApexCharts(
+document.querySelector("#compareChart"),
+{
+chart:{
+type:"bar",
+height:320,
+stacked:true
+},
+series:[
+{
+name:"حقوقی",
+data:[
+1248,
+905,
+514,
+395,
+357
+]
+},
+{
+name:"کیفری",
+data:[
+80,
+60,
+45,
+40,
+35
+]
+}
+],
+xaxis:{
+categories:[
+"فارس",
+"گلستان",
+"مرکزی",
+"خراسان رضوی",
+"کرمانشاه"
+]
+}
+}
+).render();
+
+/* درخواست ها */
+
+new ApexCharts(
+document.querySelector("#requestChart"),
+{
+chart:{
+type:"bar",
+height:320
+},
+series:[{
+name:"درخواست",
+data:[
+102,
+33,
+21,
+16,
+14
+]
+}],
+xaxis:{
+categories:[
+"دفتر مرکزی",
+"گیلان",
+"البرز",
+"تهران",
+"مازندران"
+]
+},
+dataLabels:{
+enabled:true
+}
+}
+).render();
+
+/* بیشترین درخواست */
+
+new ApexCharts(
+document.querySelector("#topRequestChart"),
+{
+chart:{
+type:"radar",
+height:320
+},
+series:[{
+name:"درخواست",
+data:[
+102,
+33,
+21,
+16,
+14
+]
+}],
+labels:[
+"دفتر مرکزی",
+"گیلان",
+"البرز",
+"تهران",
+"مازندران"
+]
+}
+).render();
+
+/* عملکرد پاسخگویی */
+
+new ApexCharts(
+document.querySelector("#serviceChart"),
+{
+chart:{
+type:"radialBar",
+height:320
+},
+series:[
+90,
+96
+],
+labels:[
+"پاسخگویی",
+"رسیدگی شکایات"
+]
+}
+).render();
+
+}
+
+});
+
+</script>
+
+<div class="footer">
+
+تهیه شده برای اداره کل حقوقی و املاک بنیاد مسکن انقلاب اسلامی
+
+</div>
+
+</body>
+</html>

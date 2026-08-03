@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>داشبورد راهبردی و مدیریتی مسکن محرومین</title>
+  
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+
+  <style>
+    @font-face {
+      font-family: 'Vazirmatn';
+      src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.0.0/Vazirmatn-Regular.woff2') format('woff2');
+      font-weight: 400;
+    }
+    @font-face {
+      font-family: 'Vazirmatn';
+      src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.0.0/Vazirmatn-Bold.woff2') format('woff2');
+      font-weight: 700;
+    }
+
+    :root {
+      --bg-main: #f0f4f8;
+      --card-bg: #ffffff;
+      --primary: #1e3a8a;
+      --secondary: #0ea5e9;
+      --accent: #f59e0b;
+      --success: #10b981;
+      --danger: #ef4444;
+      --text-dark: #0f172a;
+      --text-muted: #64748b;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      background: var(--bg-main);
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+
+    /* هدر و بنر مدیریتی با افکت بیضی افقی (Horizontal Ellipse) */
+    .header {
+      position: relative;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
+      color: white;
+      padding: 60px 5% 100px;
+      overflow: hidden;
+      border-bottom-left-radius: 40px;
+      border-bottom-right-radius: 40px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      text-align: center;
+    }
+
+    /* بیضی افقی در پس‌زمینه (شعاع x=400, y=250) */
+    .header::before {
+      content: '';
+      position: absolute;
+      width: 800px;
+      height: 500px;
+      background: radial-gradient(ellipse at center, rgba(255,255,255,0.1) 0%, transparent 70%);
+      border-radius: 50%; /* با توجه به عرض و طول، بیضی افقی تشکیل می‌شود */
+      top: -150px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .header h1 {
+      font-size: 38px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      text-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    }
+
+    .header p {
+      max-width: 900px;
+      margin: 0 auto;
+      line-height: 1.8;
+      font-size: 15px;
+      color: rgba(255,255,255,0.9);
+    }
+
+    .container {
+      width: 96%;
+      max-width: 1600px;
+      margin: -60px auto 40px;
+      position: relative;
+      z-index: 5;
+    }
+
+    /* شبکه‌بندی کارت‌های آماری کوچک و پرتعداد */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 15px;
+      margin-bottom: 35px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 20px 15px;
+      box-shadow: 0 8px 20px rgba(15,23,42,0.06);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      transition: transform 0.3s, box-shadow 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(15,23,42,0.12);
+    }
+
+    .stat-icon {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: var(--secondary);
+      background: rgba(14, 165, 233, 0.1);
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 14px;
+    }
+
+    .stat-title {
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .stat-sub {
+      font-size: 11px;
+      color: var(--success);
+      font-weight: 700;
+    }
+
+    .section {
+      background: var(--card-bg);
+      border-radius: 25px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(15,23,42,0.04);
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 25px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 15px;
+    }
+
+    .section-title i {
+      color: var(--secondary);
+    }
+
+    /* گرید نمودارها */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+
+    .chart-box {
+      background: #f8fafc;
+      border-radius: 20px;
+      padding: 20px;
+      border: 1px solid #e2e8f0;
+      position: relative;
+    }
+
+    .chart-box-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: #334155;
+      text-align: center;
+    }
+
+    canvas {
+      width: 100% !important;
+      max-height: 320px !important;
+    }
+
+    /* کارت‌های تحلیلی و توضیحات */
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .analysis-card {
+      background: white;
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+      border-right: 5px solid var(--primary);
+      position: relative;
+    }
+
+    .analysis-card.success { border-right-color: var(--success); }
+    .analysis-card.danger { border-right-color: var(--danger); }
+    .analysis-card.warning { border-right-color: var(--accent); }
+
+    .analysis-card h3 {
+      font-size: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .analysis-card h3 i { font-size: 18px; }
+    .success h3 i { color: var(--success); }
+    .danger h3 i { color: var(--danger); }
+    .warning h3 i { color: var(--accent); }
+
+    .analysis-card ul {
+      padding-right: 20px;
+      line-height: 2;
+      color: #475569;
+      font-size: 13px;
+    }
+
+    /* فوتر اختصاصی */
+    .footer-box {
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: white;
+      border-radius: 25px;
+      padding: 40px;
+      text-align: right;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .footer-box h2 {
+      margin-bottom: 15px;
+      font-size: 22px;
+      color: #38bdf8;
+    }
+
+    .footer-box p {
+      line-height: 2;
+      font-size: 14px;
+      color: rgba(255,255,255,0.85);
+    }
+    
+    .signature {
+      margin-top: 30px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 13px;
+      color: #94a3b8;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    @media(max-width: 768px) {
+      .charts-grid { grid-template-columns: 1fr; }
+      .header h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-content">
+      <h1>داشبورد راهبردی و مدیریتی مسکن محرومین</h1>
+      <p>تحلیل کلان عملکرد بنیاد مسکن انقلاب اسلامی؛ ارزیابی وضعیت پروژه‌ها، روند پیشرفت فیزیکی، منابع مالی، و تحلیل جامع استانی جهت پشتیبانی از تصمیم‌گیری‌های کلان مدیریتی.</p>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon" style="color:#3b82f6; background:#eff6ff;"><i class="fa-solid fa-file-signature"></i></div>
+        <div class="stat-title">واحدهای معرفی‌شده</div>
+        <div class="stat-value">۳,۰۱۰</div>
+        <div class="stat-sub">به شبکه بانکی</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="color:#8b5cf6; background:#f5f3ff;"><i class="fa-solid fa-city"></i></div>
+        <div class="stat-title">پروژه‌های کلان</div>
+        <div class="stat-value">۵۹</div>
+        <div class="stat-sub">طرح متمرکز</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="color:#f59e0b; background:#fffbeb;"><i class="fa-solid fa-person-digging"></i></div>
+        <div class="stat-title">کل پروژه‌های فعال</div>
+        <div class="stat-value">۳۱۱</div>
+        <div class="stat-sub">در سطح کشور</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="color:#10b981; background:#ecfdf5;"><i class="fa-solid fa-hammer"></i></div>
+        <div class="stat-title">در دست اجرا</div>
+        <div class="stat-value">۲۹۲</div>
+        <div class="stat-sub">۹۳.۹٪ پروژه‌ها</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="color:#0ea5e9; background:#f0f9ff;"><i class="fa-solid fa-check-double"></i></div>
+        <div class="stat-title">اتمام یافته</div>
+        <div class="stat-value">۱۲</div>
+        <div class="stat-sub">آماده بهره‌برداری</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="color:#14b8a6; background:#f0fdfa;"><i class="fa-solid fa-sack-dollar"></i></div>
+        <div class="stat-title">منابع تجهیزشده</div>
+        <div class="stat-value">۱.۲۹</div>
+        <div class="stat-sub">هزار میلیارد تومان</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="color:#64748b; background:#f8fafc;"><i class="fa-solid fa-bullseye"></i></div>
+        <div class="stat-title">برنامه هدف‌گذاری</div>
+        <div class="stat-value">۶۳۶</div>
+        <div class="stat-sub">شاخص کلان</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="color:#ef4444; background:#fef2f2;"><i class="fa-solid fa-arrow-trend-down"></i></div>
+        <div class="stat-title">انحراف از برنامه</div>
+        <div class="stat-value">۲۸٪</div>
+        <div class="stat-sub">عقب‌ماندگی عملکرد</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><i class="fa-solid fa-chart-pie"></i> تحلیل وضعیت پروژه‌ها و پیشرفت فیزیکی</div>
+      
+      <div class="charts-grid">
+        <div class="chart-box">
+          <div class="chart-box-title">نسبت عملکرد واقعی به برنامه هدف (شاخص کلان)</div>
+          <canvas id="gaugeChart"></canvas>
+        </div>
+        
+        <div class="chart-box">
+          <div class="chart-box-title">توزیع پیشرفت در مراحل مختلف ساخت</div>
+          <canvas id="radarChart"></canvas>
+        </div>
+
+        <div class="chart-box">
+          <div class="chart-box-title">وضعیت عملیاتی کل پروژه‌ها</div>
+          <canvas id="statusPolarChart"></canvas>
+        </div>
+      </div>
+
+      <div class="analysis-grid">
+        <div class="analysis-card warning">
+          <h3><i class="fa-solid fa-triangle-exclamation"></i> آسیب‌شناسی زمانی و اجرایی</h3>
+          <ul>
+            <li><strong>گلوگاه اجرایی:</strong> تمرکز بالای پروژه‌ها در مراحل میانی (سفت‌کاری و اسکلت).</li>
+            <li><strong>انحراف زمانی:</strong> ثبت ۲۸ درصد انحراف از برنامه زمان‌بندی (عملکرد ۴۵۶ در برابر برنامه ۶۳۶).</li>
+            <li><strong>ریسک استراتژیک:</strong> پایین بودن نرخ تبدیل پروژه‌های در دست اجرا به پروژه‌های خاتمه‌یافته (تنها ۳.۸٪).</li>
+          </ul>
+        </div>
+        <div class="analysis-card success">
+          <h3><i class="fa-solid fa-lightbulb"></i> راهبردهای پیشنهادی مدیریت</h3>
+          <ul>
+            <li>توقف موقت تعریف جبهه‌های کاری جدید تا تعیین تکلیف پروژه‌های فعلی.</li>
+            <li>اولویت‌دهی تخصیص منابع به پروژه‌های با پیشرفت فیزیکی بالای ۷۰ درصد.</li>
+            <li>استقرار سیستم پایش روزانه (Data-Driven) برای شناسایی تاخیرات در سطح خرد.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><i class="fa-solid fa-building-columns"></i> ارزیابی شبکه بانکی و عملکرد استانی</div>
+      
+      <div class="charts-grid">
+        <div class="chart-box" style="grid-column: 1 / -1;">
+          <div class="chart-box-title">مقایسه برنامه و عملکرد استانی (میله‌ای دو رنگ و گروهی)</div>
+          <canvas id="provinceGroupedBar"></canvas>
+        </div>
+
+        <div class="chart-box">
+          <div class="chart-box-title">ترکیب پورتفوی تامین مالی پروژه (میلیارد تومان)</div>
+          <canvas id="financeDoughnut"></canvas>
+        </div>
+
+        <div class="chart-box">
+          <div class="chart-box-title">سهم مشارکت بانک‌های عامل در تسهیلات</div>
+          <canvas id="bankBarChart"></canvas>
+        </div>
+      </div>
+
+      <div class="analysis-grid">
+        <div class="analysis-card success">
+          <h3><i class="fa-solid fa-map-location-dot"></i> پیشتازان استانی</h3>
+          <ul>
+            <li><strong>خراسان جنوبی:</strong> موفق‌ترین استان در اتمام و تحویل قطعی پروژه‌ها.</li>
+            <li><strong>سیستان و بلوچستان:</strong> دارای بالاترین حجم عملیات اجرایی و تطابق نسبی با برنامه.</li>
+            <li>تطابق بالای عملکرد با برنامه در استان‌های هدفِ اصلیِ محرومیت‌زدایی.</li>
+          </ul>
+        </div>
+        <div class="analysis-card danger">
+          <h3><i class="fa-solid fa-circle-exclamation"></i> ریسک‌های مالی و تامین زمین</h3>
+          <ul>
+            <li><strong>وابستگی زمین:</strong> وابستگی شدید به تفاهم‌نامه‌ها (۳۰۵ مورد) و اراضی راه و شهرسازی؛ سهم زمین‌های مستقیم بنیاد بسیار ناچیز است (۵ مورد).</li>
+            <li><strong>تراکم بانکی:</strong> اتکای بیش از حد به بانک مسکن و مشارکت ضعیف سایر بانک‌ها (ملی، تجارت، ملت).</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-box">
+      <h2><i class="fa-solid fa-clipboard-check"></i> جمع‌بندی راهبردی جهت استحضار ریاست محترم بنیاد</h2>
+      <p>
+        پروژه عظیم «مسکن محرومین» با تجهیز بالغ بر ۱.۲۹ همت منابع، در گستره ملی فعال گردیده است. با این حال، تحلیل داده‌های عملکردی نشان می‌دهد استراتژی سازمان در مقطع کنونی باید از «توسعه افقی پروژه‌ها» به «تکمیل و بهره‌برداری سریع» تغییر فاز دهد. انباشت پروژه‌های نیمه‌تمام در کنار وابستگی بالا به یک بانک خاص، نیازمند دیپلماسی فعال بانکی و هدایت هدفمند نقدینگی به سمت پروژه‌های رو به اتمام است.
+      </p>
+      <div class="signature">
+        <span>داشبورد تحلیلی یکپارچه مدیریت استراتژیک (نسخه ۱.۴)</span>
+        <span><strong>تهیه و تنظیم:</strong> علی عسگری کچوسنگی - مشاور توسعه مدیریت و منابع (با ۲۲ سال سابقه اجرایی)</span>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+  // تنظیمات عمومی Chart.js
+  Chart.register(ChartDataLabels); // فعال‌سازی پلاگین لیبل‌ها
+  Chart.defaults.font.family = 'Vazirmatn';
+  Chart.defaults.color = '#475569';
+  Chart.defaults.plugins.tooltip.titleFont = { family: 'Vazirmatn', size: 14 };
+  Chart.defaults.plugins.tooltip.bodyFont = { family: 'Vazirmatn', size: 13 };
+
+  // تنظیمات مشترک برای DataLabels جهت خوانایی اعداد
+  const commonDataLabels = {
+    color: '#ffffff',
+    font: { weight: 'bold', size: 12 },
+    padding: 4,
+    formatter: Math.round
+  };
+
+  // 1. نمودار گیج (Gauge) برای مقایسه کلان برنامه و عملکرد
+  const gaugeCtx = document.getElementById('gaugeChart');
+  new Chart(gaugeCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['عملکرد محقق شده', 'عقب‌ماندگی از برنامه'],
+      datasets: [{
+        // ایندکس 0 برای عملکرد، ایندکس 1 برای باقیمانده
+        data: [456.73, 179.76], 
+        backgroundColor: ['#10b981', '#f1f5f9'],
+        borderWidth: 0,
+        circumference: 180,
+        rotation: -90,
+        cutout: '75%'
+      }]
+    },
+    options: {
+      aspectRatio: 1.8,
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: true },
+        datalabels: { display: false } // اعداد به صورت دستی وسط رسم می‌شوند
+      }
+    },
+    plugins: [{
+      id: 'gaugeText',
+      beforeDraw: function(chart) {
+        let width = chart.width, height = chart.height, ctx = chart.ctx;
+        ctx.restore();
+        let fontSize = (height / 100).toFixed(2);
+        ctx.font = "bold " + fontSize + "em Vazirmatn";
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = "#0f172a";
+        let text = "۷۱٪ تحقق", textX = Math.round((width - ctx.measureText(text).width) / 2), textY = height - 20;
+        ctx.fillText(text, textX, textY);
+        
+        ctx.font = "normal " + (fontSize*0.4) + "em Vazirmatn";
+        ctx.fillStyle = "#64748b";
+        let subText = "برنامه: ۶۳۶ | عملکرد: ۴۵۶", subTextX = Math.round((width - ctx.measureText(subText).width) / 2);
+        ctx.fillText(subText, subTextX, textY + 25);
+        ctx.save();
+      }
+    }]
+  });
+
+  // 2. نمودار رادار پیشرفت فیزیکی
+  const radarCtx = document.getElementById('radarChart');
+  new Chart(radarCtx, {
+    type: 'radar',
+    data: {
+      labels: ['سقف', 'کاشی', 'سفت کاری', 'فونداسیون', 'اسکلت', 'کف سازی', 'بهره برداری'],
+      datasets: [{
+        label: 'درصد توزیع فیزیکی',
+        data: [14.06, 13.60, 12.36, 11.59, 10.51, 9.74, 7.26],
+        backgroundColor: 'rgba(14, 165, 233, 0.2)',
+        borderColor: '#0ea5e9',
+        pointBackgroundColor: '#0284c7',
+        borderWidth: 2
+      }]
+    },
+    options: {
+      scales: { r: { ticks: { display: false }, pointLabels: { font: { size: 12, family: 'Vazirmatn' } } } },
+      plugins: { datalabels: { display: false }, legend: { display: false } }
+    }
+  });
+
+  // 3. نمودار قطبی (Polar Area) وضعیت پروژه‌ها
+  const polarCtx = document.getElementById('statusPolarChart');
+  new Chart(polarCtx, {
+    type: 'polarArea',
+    data: {
+      labels: ['در دست اجرا', 'اتمام یافته', 'نامشخص'],
+      datasets: [{
+        data: [292, 12, 7],
+        backgroundColor: [
+          'rgba(59, 130, 246, 0.8)', // آبی
+          'rgba(16, 185, 129, 0.8)', // سبز
+          'rgba(239, 68, 68, 0.8)'   // قرمز
+        ]
+      }]
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          color: '#fff',
+          font: { weight: 'bold', size: 14 }
+        },
+        legend: { position: 'bottom' }
+      }
+    }
+  });
+
+  // 4. نمودار استانی میله‌ای گروهی (دو رنگ، دو بخش با نمایش مقادیر)
+  const groupedBarCtx = document.getElementById('provinceGroupedBar');
+  new Chart(groupedBarCtx, {
+    type: 'bar',
+    data: {
+      labels: ['سیستان و بلوچستان', 'خراسان جنوبی', 'خراسان رضوی', 'آذربایجان غربی'],
+      datasets: [
+        {
+          label: 'برنامه مصوب',
+          data: [30, 30, 28, 24],
+          backgroundColor: '#94a3b8',
+          borderRadius: 6
+        },
+        {
+          label: 'عملکرد واقعی',
+          data: [26, 26, 24, 22],
+          backgroundColor: '#3b82f6',
+          borderRadius: 6
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'top' },
+        datalabels: {
+          anchor: 'end',
+          align: 'end',
+          color: '#1e293b',
+          font: { weight: 'bold' },
+          offset: 2
+        }
+      },
+      scales: {
+        y: { beginAtZero: true, max: 35, grid: { color: '#f1f5f9' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+
+  // 5. نمودار دونات ترکیب منابع مالی
+  const financeCtx = document.getElementById('financeDoughnut');
+  new Chart(financeCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['تسهیلات بانکی', 'منابع داخلی بنیاد', 'آورده متقاضیان'],
+      datasets: [{
+        data: [693.3, 317.5, 279.9],
+        backgroundColor: ['#2563eb', '#14b8a6', '#f59e0b'],
+        borderWidth: 2,
+        borderColor: '#ffffff'
+      }]
+    },
+    options: {
+      plugins: {
+        legend: { position: 'bottom' },
+        datalabels: {
+          color: '#fff',
+          font: { weight: 'bold', size: 12 },
+          formatter: (value) => value + ' B'
+        }
+      }
+    }
+  });
+
+  // 6. نمودار میله‌ای افقی سهم بانک‌ها
+  const bankCtx = document.getElementById('bankBarChart');
+  new Chart(bankCtx, {
+    type: 'bar',
+    data: {
+      labels: ['مسکن', 'صادرات', 'ملی', 'کشاورزی', 'تجارت', 'ملت'],
+      datasets: [{
+        label: 'تعداد تسهیلات',
+        data: [1674, 597, 574, 65, 60, 40],
+        backgroundColor: ['#1d4ed8', '#0ea5e9', '#f59e0b', '#10b981', '#8b5cf6', '#ef4444'],
+        borderRadius: 8
+      }]
+    },
+    options: {
+      indexAxis: 'y', // تبدیل به میله‌ای افقی برای تنوع و خوانایی بهتر نام بانک‌ها
+      plugins: {
+        legend: { display: false },
+        datalabels: {
+          anchor: 'end',
+          align: 'start',
+          color: '#fff',
+          font: { weight: 'bold' },
+          padding: 8
+        }
+      },
+      scales: {
+        x: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+</script>
+</body>
+</html>
