@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>سامانه هوشمند مدیریتی ریاست بنیاد مسکن</title>
+
+<style>
+    /* =========================
+       Fonts & Reset
+    ========================== */
+    @font-face {
+        font-family: 'Vazirmatn';
+        src: url('./Vazirmatn-Regular.woff2') format('woff2');
+        font-weight: 400;
+        font-display: swap;
+    }
+
+    @font-face {
+        font-family: 'Vazirmatn';
+        src: url('./Vazirmatn-Bold.woff2') format('woff2');
+        font-weight: 700;
+        font-display: swap;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Vazirmatn', sans-serif;
+        background:
+            radial-gradient(circle at top right, rgba(145,0,80,.05), transparent 30%),
+            radial-gradient(circle at bottom left, rgba(0,60,120,.05), transparent 30%),
+            linear-gradient(135deg, #f0f2f5, #e6eaf0);
+        color: #1c1c1c;
+        overflow-x: hidden;
+        min-height: 100vh;
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    /* =========================
+       Main Wrapper & Decorative
+    ========================== */
+    .dashboard {
+        width: 100%;
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+        padding: 30px 20px 80px;
+    }
+
+    .bg-shape {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.12;
+        z-index: 0;
+    }
+
+    .shape1 {
+        width: 350px;
+        height: 350px;
+        background: #8b004f;
+        top: -100px;
+        right: -100px;
+    }
+
+    .shape2 {
+        width: 320px;
+        height: 320px;
+        background: #004f8b;
+        bottom: -100px;
+        left: -100px;
+    }
+
+    /* =========================
+       Banner / Header
+    ========================== */
+    .banner {
+        position: relative;
+        max-width: 1600px;
+        margin: 0 auto 50px auto;
+        background: linear-gradient(135deg, #003d73 0%, #8b004f 100%);
+        border-radius: 24px;
+        padding: 40px 30px;
+        text-align: center;
+        box-shadow: 0 15px 35px rgba(0, 30, 80, 0.15);
+        z-index: 2;
+        overflow: hidden;
+    }
+
+    /* Banner overlay pattern */
+    .banner::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 60%);
+        opacity: 0.8;
+    }
+
+    .banner h1 {
+        position: relative;
+        color: #ffffff;
+        font-size: clamp(26px, 3.5vw, 42px);
+        font-weight: 700;
+        margin-bottom: 12px;
+        text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        z-index: 2;
+    }
+
+    .banner h2 {
+        position: relative;
+        color: #e0e8f0;
+        font-size: clamp(16px, 1.8vw, 24px);
+        font-weight: 400;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        z-index: 2;
+    }
+
+    /* =========================
+       Central Layout
+    ========================== */
+    .center-layout {
+        position: relative;
+        max-width: 1600px;
+        margin: auto;
+        display: grid;
+        grid-template-columns: 1fr 420px 1fr;
+        gap: 30px;
+        align-items: center;
+        z-index: 2;
+    }
+
+    .side-column {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    /* =========================
+       Module Card
+    ========================== */
+    .module {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-radius: 24px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,1);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        overflow: hidden;
+    }
+
+    .module::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 6px;
+        height: 100%;
+        background: linear-gradient(to bottom, #8b004f, #004f8b);
+        transition: width 0.3s ease;
+    }
+
+    .module:hover {
+        transform: translateY(-8px);
+        background: #ffffff;
+        box-shadow: 
+            0 20px 40px rgba(0,0,0,0.1),
+            0 0 20px rgba(139, 0, 79, 0.15),
+            inset 0 1px 0 rgba(255,255,255,1);
+        border-color: rgba(139, 0, 79, 0.2);
+    }
+
+    /* =========================
+       Hexagon Icon (Untouched Design)
+    ========================== */
+    .hexagon {
+        min-width: 100px;
+        width: 100px;
+        height: 100px;
+        position: relative;
+        clip-path: polygon(
+            25% 6.7%,
+            75% 6.7%,
+            100% 50%,
+            75% 93.3%,
+            25% 93.3%,
+            0% 50%
+        );
+        background: linear-gradient(135deg, #ffffff, #f0f4f8);
+        border: 3px solid #8b004f;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 18px rgba(0,0,0,0.12), inset 0 0 20px rgba(255,255,255,0.6);
+        overflow: hidden;
+    }
+
+    .hexagon img {
+        width: 75%;
+        height: 75%;
+        object-fit: contain;
+        transition: transform 0.4s ease;
+    }
+
+    .module:hover .hexagon img {
+        transform: scale(1.1);
+    }
+
+    /* =========================
+       Content
+    ========================== */
+    .content {
+        flex: 1;
+    }
+
+    .content h3 {
+        font-size: 20px;
+        color: #003d73;
+        margin-bottom: 12px;
+        font-weight: 700;
+        transition: color 0.3s ease;
+    }
+
+    .module:hover .content h3 {
+        color: #8b004f;
+    }
+
+    .content ul {
+        list-style: none;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px 15px;
+    }
+
+    .content li {
+        position: relative;
+        padding-right: 14px;
+        font-size: 13.5px;
+        color: #444;
+        line-height: 1.6;
+        transition: color 0.3s ease;
+    }
+
+    .module:hover .content li {
+        color: #111;
+    }
+
+    .content li::before {
+        content: '◆';
+        position: absolute;
+        right: 0;
+        top: 2px;
+        color: #8b004f;
+        font-size: 9px;
+    }
+
+    /* =========================
+       Center Core (Untouched Design)
+    ========================== */
+    .center-core {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 820px;
+    }
+
+    .center-circle {
+        position: relative;
+        width: 360px;
+        height: 360px;
+        border-radius: 50%;
+        background: radial-gradient(circle at center, #ffffff 0%, #f7f7f7 70%);
+        box-shadow: 0 25px 50px rgba(0,0,0,.15), inset 0 0 30px rgba(255,255,255,.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 8px solid rgba(139,0,79,.08);
+        animation: float 5s ease-in-out infinite;
+    }
+
+    .center-circle::before {
+        content: '';
+        position: absolute;
+        inset: -18px;
+        border-radius: 50%;
+        border: 2px dashed rgba(139,0,79,.35);
+        animation: rotate 18s linear infinite;
+    }
+
+    .center-circle img {
+        width: 68%;
+        object-fit: contain;
+        filter: drop-shadow(0 8px 15px rgba(0,0,0,.15));
+    }
+
+    @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-12px); }
+    }
+
+    /* =========================
+       Footer
+    ========================== */
+    .footer {
+        margin-top: 60px;
+        text-align: center;
+        color: #666;
+        font-size: 14px;
+        opacity: 0.9;
+        font-weight: bold;
+    }
+
+    /* =========================
+       Responsive Design (Optimized)
+    ========================== */
+    @media (max-width: 1400px) {
+        .center-layout {
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+
+        .center-core {
+            order: -1; /* دایره در بالای کارت‌ها قرار می‌گیرد */
+            min-height: auto;
+            padding: 40px 0 20px 0;
+        }
+
+        .center-circle {
+            width: 320px;
+            height: 320px;
+        }
+
+        .side-column {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* دو ستونه شدن کارت‌ها */
+            gap: 20px;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .banner {
+            padding: 30px 20px;
+        }
+        
+        .side-column {
+            grid-template-columns: 1fr; /* تک ستونه شدن در تبلت‌های کوچکتر */
+        }
+    }
+
+    @media (max-width: 768px) {
+        .dashboard {
+            padding: 15px 15px 40px;
+        }
+
+        .banner {
+            border-radius: 18px;
+            margin-bottom: 30px;
+            padding: 25px 15px;
+        }
+
+        .module {
+            flex-direction: column;
+            text-align: center;
+            padding: 25px 15px;
+            gap: 15px;
+        }
+        
+        .module::before {
+            width: 100%;
+            height: 5px;
+            top: 0;
+            right: 0;
+        }
+
+        .content h3 {
+            font-size: 18px;
+        }
+
+        .content ul {
+            grid-template-columns: 1fr;
+            text-align: right;
+            padding: 0 10px;
+        }
+
+        .hexagon {
+            width: 90px;
+            height: 90px;
+            min-width: 90px;
+        }
+
+        .center-circle {
+            width: 250px;
+            height: 250px;
+        }
+        
+        .center-circle::before {
+            inset: -12px;
+        }
+    }
+
+</style>
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <div class="bg-shape shape1"></div>
+    <div class="bg-shape shape2"></div>
+
+    <div class="banner">
+        <h1>سامانه هوشمند مدیریتی ریاست</h1>
+        <h2>بنیاد مسکن انقلاب اسلامی</h2>
+    </div>
+
+    <div class="center-layout">
+
+        <div class="side-column">
+            <a href="#">
+                <div class="module">
+                    <div class="hexagon">
+                        <img src="ICO_01.png" alt="">
+                    </div>
+                    <div class="content">
+                        <h3>امور پرسنلی و حقوقی</h3>
+                        <ul>
+                            <li>ارزیابی کارکنان</li>
+                            <li>پرونده‌های حقوقی</li>
+                            <li>وضعیت استخدامی</li>
+                            <li>آموزش و ارتقاء</li>
+                        </ul>
+                    </div>
+                </div>
+            </a>
+
+            <a href="#">
+                <div class="module">
+                    <div class="hexagon">
+                        <img src="ICO_02.png" alt="">
+                    </div>
+                    <div class="content">
+                        <h3>هوش مصنوعی</h3>
+                        <ul>
+                            <li>تحلیل داده‌ها</li>
+                            <li>هشدار هوشمند</li>
+                            <li>پیش‌بینی روندها</li>
+                            <li>تحلیل سناریو</li>
+                        </ul>
+                    </div>
+                </div>
+            </a>
+
+            <a href="#">
+                <div class="module">
+                    <div class="hexagon">
+                        <img src="ICO_03.png" alt="">
+                    </div>
+                    <div class="content">
+                        <h3>امور استان‌ها</h3>
+                        <ul>
+                            <li>پایش عملکرد</li>
+                            <li>منابع و اعتبارات</li>
+                            <li>شاخص‌های توسعه</li>
+                            <li>ارزیابی مدیران</li>
+                        </ul>
+                    </div>
+                </div>
+            </a>
+
+            <a href="#">
+                <div class="module">
+                    <div class="hexagon">
+                        <img src="ICO_04.png" alt="">
+                    </div>
+                    <div class="content">
+                        <h3>سامانه‌های بنیاد مسکن</h3>
+                        <ul>
+                            <li>GIS سازمانی</li>
+                            <li>سامانه رفاهی</li>
+                            <li>سامانه پیام</li>
+                            <li>پرتال سازمانی</li>
+                        </ul>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="center-core">
+            <div class="center-circle">
+                <img src="ArmAnimate.gif" alt="Logo">
+            </div>
+        </div>
+
+        <div class="side-column">
+            <a href="#">
+                <div class="module">
+                    <div class="hexagon">
+                        <img src="ICO_05.png" alt="">
+                    </div>
+                    <div class="content">
+                        <h3>تعاملات پارلمانی و دولتی</h3>
+                        <ul>
+                            <li>تحلیل مصوبات</li>
+                            <li>تعامل با استانداری‌ها</li>
+                            <li>بانک پیشنهادات</li>
+                            <li>پایش لوایح</li>
+                        </ul>
+                    </div>
+                </div>
+            </a>
+
+            <a href="#">
+                <div class="module">
+                    <div class="hexagon">
+                        <img src="ICO_06.png" alt="">
+                    </div>
+                    <div class="content">
+                        <h3>پایش و ارزیابی عملکرد</h3>
+                        <ul>
+                            <li>شاخص‌های کلان</li>
+                            <li>تحلیل انحرافات</li>
+                            <li>داشبورد مدیریتی</li>
+                            <li>گزارشات دوره‌ای</li>
+                        </ul>
+                    </div>
+                </div>
+            </a>
+
+            <a href="#">
+                <div class="module">
+                    <div class="hexagon">
+                        <img src="ICO_07.png" alt="">
+                    </div>
+                    <div class="content">
+                        <h3>امور شرکت‌ها و مجامع</h3>
+                        <ul>
+                            <li>عملکرد پروژه‌ها</li>
+                            <li>سرمایه‌گذاری</li>
+                            <li>اطلاعات مالی</li>
+                            <li>عملکرد هیئت مدیره</li>
+                        </ul>
+                    </div>
+                </div>
+            </a>
+
+            <a href="#">
+                <div class="module">
+                    <div class="hexagon">
+                        <img src="ICO_08.png" alt="">
+                    </div>
+                    <div class="content">
+                        <h3>رسانه‌ها و شبکه‌های اجتماعی</h3>
+                        <ul>
+                            <li>رصد رسانه‌ای</li>
+                            <li>تحلیل افکار عمومی</li>
+                            <li>تحلیل بازخورد</li>
+                            <li>پایش اخبار</li>
+                        </ul>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        طراحی شده برای سامانه هوشمند مدیریتی ریاست بنیاد مسکن انقلاب اسلامی
+    </div>
+
+</div>
+
+</body>
+</html>

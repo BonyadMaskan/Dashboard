@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد هوشمند مدیریتی ریاست</title>
+
+    <style>
+        @font-face {
+            font-family: 'Vazirmatn';
+            src: url('./Vazirmatn-Regular.woff2') format('woff2');
+            font-weight: 400;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Vazirmatn';
+            src: url('./Vazirmatn-Bold.woff2') format('woff2');
+            font-weight: 700;
+            font-display: swap;
+        }
+
+        :root {
+            --bg-color: #f4f7fc;
+            --primary-dark: #0f2c59;
+            --primary-light: #205295;
+            --accent: #d8c3a5;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --radius-x: 400px;
+            --radius-y: 250px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Vazirmatn', sans-serif;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(32, 82, 149, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(15, 44, 89, 0.05) 0%, transparent 40%),
+                var(--bg-color);
+            position: relative;
+        }
+
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(15, 44, 89, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(15, 44, 89, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: 0;
+        }
+
+        .banner {
+            display: none;
+            width: 100%;
+            height: 90px;
+            background: url('Banner.png') center center/cover no-repeat;
+            background-color: var(--primary-dark); 
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-bottom: 3px solid var(--accent);
+        }
+
+        .main {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+        }
+
+        .dashboard-ring {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            max-width: 1200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .orbit {
+            position: absolute;
+            width: calc(2 * var(--radius-x));
+            height: calc(2 * var(--radius-y));
+            border-radius: 50%;
+            border: 1.5px dashed rgba(32, 82, 149, 0.25);
+            z-index: 1;
+            /* انیمیشن چرخش برداشته شد تا بیضی ثابت بماند و فقط نقش خط‌چین داشته باشد */
+        }
+
+        @keyframes orbitRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .logo-container {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 20px 40px rgba(15, 44, 89, 0.08), inset 0 0 20px rgba(0, 0, 0, 0.02);
+            animation: floatLogo 6s ease-in-out infinite;
+        }
+
+        .logo-container::before {
+            content: '';
+            position: absolute;
+            inset: -10px;
+            border-radius: 50%;
+            border: 2.5px dashed rgba(212,175,55,.6);
+            animation: orbitRotate 20s linear infinite;
+        }
+
+        .logo-container img {
+            width: 65%;
+            object-fit: contain;
+        }
+
+        @keyframes floatLogo {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-25px); } /* دامنه حرکت دایره وسط بیشتر شد */
+        }
+
+        .module {
+            position: absolute;
+            width: 110px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            z-index: 20;
+            top: 50%;
+            left: 50%;
+            margin-top: -55px; 
+            margin-left: -55px; 
+            transition: z-index 0s;
+        }
+
+        .module:hover {
+            z-index: 99999;
+        }
+
+        .module .icon-box {
+            width: 78px;
+            height: 78px;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(6px);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(15, 44, 89, 0.06);
+            border: 1px solid rgba(32, 82, 149, 0.1);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .module img {
+            width: 65px;
+            height: 65px;
+            object-fit: contain;
+            transition: transform 0.4s ease;
+        }
+
+        .module:hover .icon-box {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 25px rgba(15, 44, 89, 0.12);
+            border-color: var(--primary-light);
+        }
+
+        .module:hover img {
+            transform: scale(1.08);
+        }
+
+        .title {
+            margin-top: 10px;
+            color: var(--primary-dark);
+            font-size: 13.5px;
+            font-weight: 700;
+            text-align: center;
+            white-space: nowrap;
+            text-shadow: 0 2px 4px rgba(255,255,255,0.8);
+            transition: color 0.3s ease;
+        }
+
+        .module:hover .title {
+            color: var(--primary-light);
+        }
+
+        .m1  { transform: translate(0, calc(-1 * var(--radius-y))); }
+        .m2  { transform: translate(calc(0.5 * var(--radius-x)), calc(-0.866 * var(--radius-y))); }
+        .m3  { transform: translate(calc(0.866 * var(--radius-x)), calc(-0.5 * var(--radius-y))); }
+        .m4  { transform: translate(var(--radius-x), 0); }
+        .m5  { transform: translate(calc(0.866 * var(--radius-x)), calc(0.5 * var(--radius-y))); }
+        .m6  { transform: translate(calc(0.5 * var(--radius-x)), calc(0.866 * var(--radius-y))); }
+        .m7  { transform: translate(0, var(--radius-y)); }
+        .m8  { transform: translate(calc(-0.5 * var(--radius-x)), calc(0.866 * var(--radius-y))); }
+        .m9  { transform: translate(calc(-0.866 * var(--radius-x)), calc(0.5 * var(--radius-y))); }
+        .m10 { transform: translate(calc(-1 * var(--radius-x)), 0); }
+        .m11 { transform: translate(calc(-0.866 * var(--radius-x)), calc(-0.5 * var(--radius-y))); }
+        .m12 { transform: translate(calc(-0.5 * var(--radius-x)), calc(-0.866 * var(--radius-y))); }
+
+        .info-card {
+            position: absolute;
+            width: 320px;
+            background: linear-gradient(135deg, rgba(255,255,255,.98), rgba(245,250,255,.96));
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 20px 50px rgba(15,44,89,.15);
+            border: 2px solid rgba(212,175,55,0);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.7s, border-color 0.7s ease, box-shadow 0.7s ease;
+            z-index: 99999;
+            pointer-events: none;
+            text-align: right;
+        }
+
+        .module:hover .info-card {
+            opacity: 1;
+            visibility: visible;
+            border-color: rgba(212,175,55,0.85);
+            box-shadow: 0 25px 55px rgba(15,44,89,.22), 0 0 20px rgba(212,175,55,0.15);
+        }
+
+        .m1 .info-card, .m2 .info-card, .m3 .info-card, .m4 .info-card, .m5 .info-card {
+            top: 50%;
+            right: 125%; 
+            transform: translateY(-50%) translateX(-30px);
+        }
+        .m1:hover .info-card, .m2:hover .info-card, .m3:hover .info-card, .m4:hover .info-card, .m5:hover .info-card {
+            transform: translateY(-50%) translateX(0);
+        }
+
+        .m6 .info-card, .m7 .info-card, .m8 .info-card, .m9 .info-card, .m10 .info-card, .m11 .info-card, .m12 .info-card {
+            top: 50%;
+            left: 125%;
+            transform: translateY(-50%) translateX(30px);
+        }
+        .m6:hover .info-card, .m7:hover .info-card, .m8:hover .info-card, .m9:hover .info-card, .m10:hover .info-card, .m11:hover .info-card, .m12:hover .info-card {
+            transform: translateY(-50%) translateX(0);
+        }
+
+        .m1 .info-card { top: 115%; transform: translateY(30px) translateX(50%); right: 50%; }
+        .m1:hover .info-card { transform: translateY(0) translateX(50%); }
+        
+        .m7 .info-card { bottom: 115%; top: auto; transform: translateY(-30px) translateX(50%); left: 50%; }
+        .m7:hover .info-card { transform: translateY(0) translateX(50%); }
+
+        .info-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(15, 44, 89, 0.1);
+        }
+
+        .info-header img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .info-header h3 {
+            color: var(--primary-dark);
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .info-card ul {
+            list-style: none;
+        }
+
+        .info-card li {
+            position: relative;
+            padding-right: 20px;
+            margin: 10px 0;
+            color: var(--text-main);
+            font-size: 13.5px;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        .info-card li::before {
+            content: '✦' !important;
+            position: absolute;
+            right: 0;
+            top: 1px;
+            color: #c79a2b;
+            background: none !important;
+            box-shadow: none !important;
+        }
+
+        @media(max-width: 1200px) {
+            :root {
+                --radius-x: 350px;
+                --radius-y: 220px;
+            }
+        }
+
+        @media(max-width: 992px) {
+            :root {
+                --radius-x: 300px;
+                --radius-y: 190px;
+            }
+        }
+
+        @media(max-width: 800px), (orientation: portrait) {
+            html, body { overflow: auto; }
+            .bg-grid { display: none; }
+            
+            .system-title {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin: 20px auto 40px auto; /* فاصله مناسب در زیر کادر برای جلوگیری از افتادن روی آرم */
+                width: 92%;
+                max-width: 450px;
+                text-align: center;
+                background: #0f2c59; /* رنگ متمایز سورمه‌ای */
+                border: 2px solid #d8c3a5; /* افکت دور خط */
+                border-radius: 18px;
+                box-shadow: 0 8px 25px rgba(15,44,89,.2);
+                padding: 16px 20px;
+            }
+
+            .system-title .sub-line {
+                color: #d8c3a5; /* رنگ متن متناسب با پس زمینه تیره */
+            }
+
+            .system-title .main-line {
+                color: #ffffff; /* رنگ متن متناسب با پس زمینه تیره */
+            }
+
+            .main {
+                height: auto;
+                padding: 10px 0 40px 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+            }
+
+            .dashboard-ring {
+                flex-direction: column;
+                gap: 0;
+                height: auto;
+            }
+
+            .orbit { display: none; }
+            
+            .logo-container { 
+                margin: 0 auto 40px auto; /* فاصله مناسب از کادر بالا */
+                width: 140px; 
+                height: 140px; 
+            }
+
+            .module {
+                position: relative;
+                top: auto; left: auto;
+                margin: 6px auto; 
+                width: 92%;
+                flex-direction: row;
+                background: #ffffff;
+                border-radius: 15px;
+                padding: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+                transform: none !important;
+                border-right: 4px solid var(--primary-light);
+            }
+
+            .module .icon-box {
+                box-shadow: none;
+                border: none;
+                background: transparent;
+                backdrop-filter: none;
+                width: 55px; height: 55px;
+            }
+            
+            .module img {
+                width: 48px; height: 48px;
+            }
+            
+            .title { 
+                margin-top: 0; 
+                margin-right: 15px; 
+                font-size: 15px; 
+                text-align: right; 
+                white-space: nowrap; 
+            }
+
+            .info-card {
+                position: static;
+                width: 100%;
+                opacity: 1;
+                visibility: visible;
+                box-shadow: none;
+                border: none;
+                padding: 10px;
+                background: transparent !important;
+                transform: none !important;
+                display: none; 
+            }
+        }
+    
+        .system-title {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            padding: 14px 24px;
+            background: rgba(255,255,255,.96);
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(15,44,89,.08);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            text-align: right;
+            border-right: 4px solid var(--primary-light);
+        }
+        
+        .system-title .sub-line {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        .system-title .main-line {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="bg-grid"></div>
+    
+    <div class="system-title">
+        <span class="sub-line">داشبورد هوشمند مدیریتی بنیاد</span>
+        <span class="main-line">ریاست بنیاد مسکن</span>
+    </div>
+
+    <div class="banner"></div>
+
+    <div class="main">
+        <div class="dashboard-ring">
+            
+            <div class="orbit"></div>
+
+            <div class="logo-container">
+                <img src="ArmAnimate.gif" alt="لوگو">
+            </div>
+
+            <a href="#" class="module m1">
+                <div class="icon-box"><img src="ICO_Alert.png" alt="هشدار"></div>
+                <div class="title">سامانه هشدار هوشمند</div>
+                <div class="info-card">
+                    <div class="info-header">
+                        <img src="ICO_Alert.png" alt="هشدار">
+                        <h3>سامانه هشدار هوشمند</h3>
+                    </div>
+                    <ul>
+                        <li>پایش لحظه‌ای رخدادها و بحران‌ها</li>
+                        <li>هشدار فوری انحراف شاخص‌های کلیدی</li>
+                        <li>تحلیل تهدیدها و مدیریت ریسک</li>
+                        <li>ارجاع و پیگیری هشدارهای مدیریتی</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="#" class="module m2">
+                <div class="icon-box"><img src="ICO_02.png" alt="پارلمانی"></div>
+                <div class="title">تعاملات پارلمانی و دولت</div>
+                <div class="info-card">
+                    <div class="info-header">
+                        <img src="ICO_02.png" alt="پارلمانی">
+                        <h3>تعاملات پارلمانی و دولت</h3>
+                    </div>
+                    <ul>
+                        <li>رصد و پایش مصوبات و قوانین</li>
+                        <li>مدیریت ارتباطات دستگاه‌های اجرایی</li>
+                        <li>تحلیل موضوعات کلان ملی</li>
+                        <li>پایش مستمر مکاتبات راهبردی</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="#" class="module m3">
+                <div class="icon-box"><img src="ICO_03.png" alt="شورا"></div>
+                <div class="title">امور شورای مرکزی</div>
+                <div class="info-card">
+                    <div class="info-header">
+                        <img src="ICO_03.png" alt="شورا">
+                        <h3>امور شورای مرکزی</h3>
+                    </div>
+                    <ul>
+                        <li>برنامه‌ریزی و مدیریت جلسات شورا</li>
+                        <li>پیگیری و رصد مصوبات</li>
+                        <li>تامین داده‌های تصمیم‌ساز مدیریتی</li>
+                        <li>کنترل فرآیندهای کلان سازمانی</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="#" class="module m4">
+                <div class="icon-box"><img src="ICO_04.png" alt="منابع انسانی"></div>
+                <div class="title">سرمایه انسانی و رفاه</div>
+                <div class="info-card">
+                    <div class="info-header">
+                        <img src="ICO_04.png" alt="منابع انسانی">
+                        <h3>سرمایه انسانی و رفاه</h3>
+                    </div>
+                    <ul>
+                        <li>نظارت بر مدیریت منابع انسانی</li>
+                        <li>داشبورد ارزشیابی مدیران و کارکنان</li>
+                        <li>پایش پرونده‌های کلان حقوقی</li>
+                        <li>برنامه‌ریزی آموزش و ارتقاء</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="#" class="module m5">
+                <div class="icon-box"><img src="ICO_05.png" alt="هوش مصنوعی"></div>
+                <div class="title">تحلیل‌گر هوش مصنوعی</div>
+                <div class="info-card">
+                    <div class="info-header">
+                        <img src="ICO_05.png" alt="هوش مصنوعی">
+                        <h3>تحلیل‌گر هوش مصنوعی</h3>
+                    </div>
+                    <ul>
+                        <li>پردازش و تحلیل داده‌های کلان</li>
+                        <li>مدل‌سازی و پیش‌بینی روندها</li>
+                        <li>کشف ناهنجاری در اطلاعات آماری</li>
+                        <li>تحلیل الگوهای رفتار سازمانی</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="#" class="module m6">
+                <div class="icon-box"><img src="ICO_06.png" alt="استان‌ها"></div>
+                <div class="title">مدیریت امور استان‌ها</div>
+                <div class="info-card">
+                    <div class="info-header">
+                        <img src="ICO_06.png" alt="استان‌ها">
+                        <h3>مدیریت امور استان‌ها</h3>
+                    </div>
+                    <ul>
+                        <li>نظارت بر شاخص‌های عملکرد استانی</li>
+                        <li>مقایسه تحلیلی پیشرفت استان‌ها</li>
+                        <li>رصد تخصیص و جذب اعتبارات</li>
+                        <li>ارزیابی عملکرد مدیران استانی</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="#" class="module m7">
+                <div class="icon-box"><img src="ICO_07.png" alt="سامانه‌ها"></div>
+                <div class="title">یکپارچه‌سازی سامانه‌ها</div>
+                <div class="info-card">
+                    <div class="info-header">
+                        <img src="ICO_07.png" alt="سامانه‌ها">
+                        <h3>یکپارچه‌سازی سامانه‌ها</h3>
+                    </div>
+                    <ul>
+                        <li>دروازه ورود به سامانه‌های داخلی</li>
+                        <li>پایش وضعیت پایداری سرویس‌ها</li>
+                        <li>دسترسی سریع به سامانه GIS</li>
+                        <li>مدیریت متمرکز گردش اطلاعات</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="#" class="module m8">
+                <div class="icon-box"><img src="ICO_08.png" alt="معاونت‌ها"></div>
+                <div class="title">هماهنگی معاونت‌ها</div>
+                <div class="info-card">
+                    <div class="info-header">
+                        <img src="ICO_08.png" alt="معاونت‌ها">
+                        <h3>هماهنگی معاونت‌ها و ستاد</h3>
+                    </div>
+                    <ul>
+                        <li>پایش خروجی و عملکرد واحدها</li>
+                        <li>تحلیل و پایش شاخص‌های مدیریتی</li>
+                        <li>تجمیع گزارشات کلان ستادی</li>
+                        <li>نظارت بر گردش کار فرآیندها</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="#" class="module m9">
+                <div class="icon-box"><img src="ICO_09.png" alt="پروژه‌ها"></div>
+                <div class="title">رصد مکانی پروژه‌ها</div>
+                <div class="info-card">
+                    <div class="info-header">
+                        <img src="ICO_09.png" alt="پروژه‌ها">
+                        <h3>رصد مکانی پروژه‌ها (GIS)</h3>
+                    </div>
+                    <ul>
+                        <li>نمایش جانمایی و پراکندگی پروژه‌ها</li>
+                        <li>کنترل لحظه‌ای پیشرفت فیزیکی</li>
+                        <li>بررسی تغییرات با تصاویر ماهواره‌ای</li>
+                        <li>دسترسی به نقشه‌ها و اسناد فنی</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="#" class="module m10">
+                <div class="icon-box"><img src="ICO_10.png" alt="رسانه"></div>
+                <div class="title">پایش افکار عمومی</div>
+                <div class="info-card">
+                    <div class="info-header">
+                        <img src="ICO_10.png" alt="رسانه">
+                        <h3>پایش رسانه و افکار عمومی</h3>
+                    </div>
+                    <ul>
+                        <li>رصد اخبار و بازتاب‌های رسانه‌ای</li>
+                        <li>تحلیل هوشمند شبکه‌های اجتماعی</li>
+                        <li>گزارشات افکارسنجی و رضایت‌سنجی</li>
+                        <li>مدیریت تصویر سازمانی بنیاد</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="#" class="module m11">
+                <div class="icon-box"><img src="ICO_11.png" alt="شرکت‌ها"></div>
+                <div class="title">امور مجامع و شرکت‌ها</div>
+                <div class="info-card">
+                    <div class="info-header">
+                        <img src="ICO_11.png" alt="شرکت‌ها">
+                        <h3>امور مجامع و شرکت‌ها</h3>
+                    </div>
+                    <ul>
+                        <li>داشبورد تحلیل مالی شرکت‌های تابعه</li>
+                        <li>پایش سبد پروژه‌های سرمایه‌گذاری</li>
+                        <li>رصد مصوبات و تعهدات مجامع</li>
+                        <li>ارزیابی بازدهی اقتصادی شرکت‌ها</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="#" class="module m12">
+                <div class="icon-box"><img src="ICO_12.png" alt="پایش"></div>
+                <div class="title">ارزیابی و پایش عملکرد</div>
+                <div class="info-card">
+                    <div class="info-header">
+                        <img src="ICO_12.png" alt="پایش">
+                        <h3>ارزیابی و پایش عملکرد</h3>
+                    </div>
+                    <ul>
+                        <li>تحلیل داشبوردی شاخص‌های کلان</li>
+                        <li>شناسایی انحراف از اهداف برنامه</li>
+                        <li>تولید گزارشات ادواری و تحلیلی</li>
+                        <li>رصد اثربخشی برنامه‌های سازمانی</li>
+                    </ul>
+                </div>
+            </a>
+
+        </div>
+    </div>
+
+</body>
+</html>

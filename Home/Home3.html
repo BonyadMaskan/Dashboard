@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>سامانه هوشمند مدیریتی ریاست</title>
+
+<style>
+
+/* =========================
+   FONT
+========================= */
+
+@font-face{
+    font-family:'Vazirmatn';
+    src:url('./Vazirmatn-Regular.woff2') format('woff2');
+    font-weight:400;
+}
+
+@font-face{
+    font-family:'Vazirmatn';
+    src:url('./Vazirmatn-Bold.woff2') format('woff2');
+    font-weight:700;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Vazirmatn',sans-serif;
+    background:
+        radial-gradient(circle at top right,#4a0033 0%,transparent 30%),
+        radial-gradient(circle at bottom left,#003f73 0%,transparent 30%),
+        linear-gradient(135deg,#edf1f7,#f8f9fb);
+
+    overflow:hidden;
+    height:100vh;
+    position:relative;
+}
+
+/* =========================
+   BACKGROUND EFFECT
+========================= */
+
+.bg{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+}
+
+.bg::before{
+    content:'';
+    position:absolute;
+    width:1800px;
+    height:1800px;
+    border-radius:50%;
+    background:
+        radial-gradient(circle,
+        rgba(139,0,63,.05) 0%,
+        rgba(0,70,130,.03) 40%,
+        transparent 70%);
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    animation:bgRotate 80s linear infinite;
+}
+
+@keyframes bgRotate{
+    from{transform:translate(-50%,-50%) rotate(0deg);}
+    to{transform:translate(-50%,-50%) rotate(360deg);}
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+    position:absolute;
+    top:35px;
+    width:100%;
+    text-align:center;
+    z-index:100;
+}
+
+.header h1{
+    color:#7f0037;
+    font-size:42px;
+    font-weight:700;
+    letter-spacing:.3px;
+    text-shadow:0 8px 25px rgba(0,0,0,.08);
+}
+
+.header h2{
+    color:#003d73;
+    font-size:19px;
+    margin-top:8px;
+    font-weight:400;
+}
+
+/* =========================
+   STAGE
+========================= */
+
+.stage{
+    width:100%;
+    height:100vh;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+/* =========================
+   CENTER LOGO
+========================= */
+
+.center{
+    position:relative;
+    width:420px;
+    height:420px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+/* only one ring */
+
+.ring{
+    position:absolute;
+    width:530px;
+    height:530px;
+    border-radius:50%;
+    border:2px dashed rgba(123,0,58,.25);
+    animation:rotate 90s linear infinite;
+}
+
+@keyframes rotate{
+    from{
+        transform:rotate(0deg);
+    }
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+.logo-wrap{
+    width:260px;
+    height:260px;
+    border-radius:50%;
+    position:relative;
+
+    background:
+        linear-gradient(145deg,
+        rgba(255,255,255,.9),
+        rgba(255,255,255,.55));
+
+    backdrop-filter:blur(15px);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    box-shadow:
+        0 30px 70px rgba(0,0,0,.18),
+        0 0 50px rgba(139,0,63,.12),
+        inset 0 0 35px rgba(255,255,255,.85);
+
+    animation:float 8s ease-in-out infinite;
+}
+
+@keyframes float{
+    0%,100%{
+        transform:translateY(0px);
+    }
+    50%{
+        transform:translateY(-12px);
+    }
+}
+
+.logo-wrap img{
+    width:72%;
+    object-fit:contain;
+    filter:
+        drop-shadow(0 10px 18px rgba(0,0,0,.16));
+}
+
+/* =========================
+   MODULES
+========================= */
+
+.module{
+    position:absolute;
+    width:170px;
+    text-align:center;
+    transition:.4s ease;
+    z-index:10;
+}
+
+.module:hover{
+    transform:scale(1.08);
+}
+
+/* icon */
+
+.icon{
+    width:125px;
+    height:125px;
+    margin:auto;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:34px;
+
+    background:
+        linear-gradient(145deg,
+        rgba(255,255,255,.82),
+        rgba(255,255,255,.42));
+
+    backdrop-filter:blur(18px);
+
+    box-shadow:
+        0 18px 35px rgba(0,0,0,.12),
+        inset 0 0 20px rgba(255,255,255,.75);
+
+    transition:.4s ease;
+}
+
+.module:hover .icon{
+    transform:translateY(-10px);
+    box-shadow:
+        0 25px 50px rgba(0,0,0,.18),
+        0 0 35px rgba(139,0,63,.18);
+}
+
+.icon img{
+    width:82%;
+    height:82%;
+    object-fit:contain;
+}
+
+/* title */
+
+.title{
+    margin-top:12px;
+    font-size:15px;
+    font-weight:700;
+    color:#1e3045;
+    line-height:1.7;
+}
+
+/* hover panel */
+
+.info{
+    position:absolute;
+
+    width:290px;
+
+    background:
+        linear-gradient(145deg,
+        rgba(255,255,255,.96),
+        rgba(248,249,252,.92));
+
+    backdrop-filter:blur(20px);
+
+    border-radius:26px;
+
+    padding:20px;
+
+    right:50%;
+    transform:translateX(50%) translateY(20px);
+
+    opacity:0;
+    visibility:hidden;
+
+    transition:.35s ease;
+
+    box-shadow:
+        0 30px 55px rgba(0,0,0,.18);
+
+    z-index:999;
+}
+
+.module:hover .info{
+    opacity:1;
+    visibility:visible;
+    transform:translateX(50%) translateY(0);
+}
+
+.info h3{
+    color:#7b003a;
+    font-size:18px;
+    margin-bottom:12px;
+}
+
+.info ul{
+    list-style:none;
+}
+
+.info li{
+    color:#333;
+    margin:10px 0;
+    font-size:14px;
+    line-height:1.9;
+}
+
+/* =========================
+   POSITIONS
+========================= */
+
+.m1{ top:3%; left:50%; transform:translateX(-50%); }
+.m2{ top:12%; right:16%; }
+.m3{ top:28%; right:5%; }
+.m4{ top:50%; right:0%; transform:translateY(-50%); }
+.m5{ bottom:18%; right:7%; }
+.m6{ bottom:4%; right:20%; }
+
+.m7{ bottom:3%; left:50%; transform:translateX(-50%); }
+.m8{ bottom:4%; left:20%; }
+.m9{ bottom:18%; left:7%; }
+.m10{ top:50%; left:0%; transform:translateY(-50%); }
+.m11{ top:28%; left:5%; }
+.m12{ top:12%; left:16%; }
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:1400px){
+
+    body{
+        overflow:auto;
+    }
+
+    .stage{
+        height:auto;
+        min-height:100vh;
+        padding:220px 0 80px;
+        display:block;
+    }
+
+    .center{
+        margin:auto;
+        width:320px;
+        height:320px;
+    }
+
+    .ring{
+        width:390px;
+        height:390px;
+    }
+
+    .logo-wrap{
+        width:210px;
+        height:210px;
+    }
+
+    .module{
+        position:relative !important;
+        inset:auto !important;
+        transform:none !important;
+        margin:35px auto;
+    }
+
+    .info{
+        width:250px;
+    }
+
+    .header h1{
+        font-size:30px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+
+<div class="header">
+    <h1>سامانه هوشمند مدیریتی ریاست</h1>
+    <h2>بنیاد مسکن انقلاب اسلامی</h2>
+</div>
+
+<div class="stage">
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <div class="ring"></div>
+
+        <div class="logo-wrap">
+            <img src="BonLogo.png">
+        </div>
+
+    </div>
+
+    <!-- 12 MODULES -->
+
+    <a href="#" class="module m1">
+        <div class="icon"><img src="ICO_01.png"></div>
+        <div class="title">تعاملات پارلمانی</div>
+        <div class="info">
+            <h3>تعاملات پارلمانی و دولتی</h3>
+            <ul>
+                <li>پایش لوایح و مصوبات</li>
+                <li>تعامل با دستگاه‌ها</li>
+                <li>تحلیل موضوعات کلان</li>
+            </ul>
+        </div>
+    </a>
+
+    <a href="#" class="module m2">
+        <div class="icon"><img src="ICO_02.png"></div>
+        <div class="title">شورای مرکزی</div>
+        <div class="info">
+            <h3>شورای مرکزی</h3>
+            <ul>
+                <li>تصمیمات کلان</li>
+                <li>صورت جلسات</li>
+                <li>پیگیری مصوبات</li>
+            </ul>
+        </div>
+    </a>
+
+    <a href="#" class="module m3">
+        <div class="icon"><img src="ICO_03.png"></div>
+        <div class="title">امور پرسنلی</div>
+        <div class="info">
+            <h3>امور پرسنلی و حقوقی</h3>
+            <ul>
+                <li>ارزیابی کارکنان</li>
+                <li>پرونده‌های حقوقی</li>
+                <li>آموزش و ارتقاء</li>
+            </ul>
+        </div>
+    </a>
+
+    <a href="#" class="module m4">
+        <div class="icon"><img src="ICO_04.png"></div>
+        <div class="title">هوش مصنوعی</div>
+        <div class="info">
+            <h3>هوش مصنوعی</h3>
+            <ul>
+                <li>تحلیل داده‌ها</li>
+                <li>پیش‌بینی روندها</li>
+                <li>هشدار هوشمند</li>
+            </ul>
+        </div>
+    </a>
+
+    <a href="#" class="module m5">
+        <div class="icon"><img src="ICO_05.png"></div>
+        <div class="title">امور استان‌ها</div>
+        <div class="info">
+            <h3>امور استان‌ها</h3>
+            <ul>
+                <li>پایش عملکرد استانی</li>
+                <li>ارزیابی مدیران</li>
+                <li>اعتبارات و منابع</li>
+            </ul>
+        </div>
+    </a>
+
+    <a href="#" class="module m6">
+        <div class="icon"><img src="ICO_06.png"></div>
+        <div class="title">سامانه‌ها</div>
+        <div class="info">
+            <h3>سامانه‌های بنیاد</h3>
+            <ul>
+                <li>GIS سازمانی</li>
+                <li>پرتال‌ها</li>
+                <li>سامانه‌های داخلی</li>
+            </ul>
+        </div>
+    </a>
+
+    <a href="#" class="module m7">
+        <div class="icon"><img src="ICO_07.png"></div>
+        <div class="title">معاونت‌ها</div>
+        <div class="info">
+            <h3>معاونت‌ها و ادارات ستادی</h3>
+            <ul>
+                <li>پایش واحدها</li>
+                <li>شاخص‌های کلان</li>
+                <li>تحلیل عملکرد</li>
+            </ul>
+        </div>
+    </a>
+
+    <a href="#" class="module m8">
+        <div class="icon"><img src="ICO_08.png"></div>
+        <div class="title">GIS پروژه‌ها</div>
+        <div class="info">
+            <h3>مدیریت پروژه‌ها</h3>
+            <ul>
+                <li>پایش پیشرفت</li>
+                <li>تصاویر ماهواره‌ای</li>
+                <li>نقشه‌های GIS</li>
+            </ul>
+        </div>
+    </a>
+
+    <a href="#" class="module m9">
+        <div class="icon"><img src="ICO_09.png"></div>
+        <div class="title">رسانه‌ها</div>
+        <div class="info">
+            <h3>رسانه و افکار عمومی</h3>
+            <ul>
+                <li>پایش اخبار</li>
+                <li>تحلیل بازخورد</li>
+                <li>افکارسنجی</li>
+            </ul>
+        </div>
+    </a>
+
+    <a href="#" class="module m10">
+        <div class="icon"><img src="ICO_10.png"></div>
+        <div class="title">شرکت‌ها</div>
+        <div class="info">
+            <h3>امور شرکت‌ها و مجامع</h3>
+            <ul>
+                <li>سرمایه‌گذاری</li>
+                <li>عملکرد پروژه‌ها</li>
+                <li>گزارش مالی</li>
+            </ul>
+        </div>
+    </a>
+
+    <a href="#" class="module m11">
+        <div class="icon"><img src="ICO_11.png"></div>
+        <div class="title">ارزیابی عملکرد</div>
+        <div class="info">
+            <h3>پایش و ارزیابی عملکرد</h3>
+            <ul>
+                <li>شاخص‌های کلان</li>
+                <li>تحلیل انحرافات</li>
+                <li>گزارشات مدیریتی</li>
+            </ul>
+        </div>
+    </a>
+
+    <a href="#" class="module m12">
+        <div class="icon"><img src="ICO_12.png"></div>
+        <div class="title">هشدارها</div>
+        <div class="info">
+            <h3>سامانه هشدار و پایش</h3>
+            <ul>
+                <li>هشدار فوری</li>
+                <li>پایش لحظه‌ای</li>
+                <li>تحلیل بحران</li>
+            </ul>
+        </div>
+    </a>
+
+</div>
+
+</body>
+</html>

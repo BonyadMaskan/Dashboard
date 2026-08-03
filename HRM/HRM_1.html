@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد مدیریتی منابع انسانی - بنیاد مسکن</title>
+    <style>
+        /* تنظیمات فونت آفلاین */
+        @font-face {
+            font-family: 'Vazirmatn';
+            src: url('Vazirmatn-Regular.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Vazirmatn';
+            src: url('Vazirmatn-Bold.woff2') format('woff2');
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        :root {
+            --primary-color: #0c3b5e; /* آبی لاجوردی سازمانی */
+            --secondary-color: #0f8e99; /* فیروزه‌ای */
+            --accent-color: #d4af37; /* طلایی */
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #777777;
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            color: var(--text-main);
+        }
+
+        /* هدر و بنر */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #155d91 100%);
+            color: white;
+            padding: 30px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-bottom: 5px solid var(--accent-color);
+        }
+
+        .header-title h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .header-title p {
+            margin: 8px 0 0 0;
+            font-size: 14px;
+            color: #d1e8ff;
+        }
+
+        .header-logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--accent-color);
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-logo span {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--accent-color);
+        }
+
+        /* کارت‌های آماری (KPI) */
+        .kpi-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 30px 40px 10px 40px;
+        }
+
+        .kpi-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            border-right: 4px solid var(--secondary-color);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            width: 80px;
+            height: 80px;
+            background: var(--secondary-color);
+            opacity: 0.05;
+            border-radius: 50%;
+        }
+
+        .kpi-title {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .kpi-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .kpi-sub {
+            font-size: 13px;
+            color: #2ecc71;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+
+        /* شبکه نمودارها */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            padding: 20px 40px 40px 40px;
+        }
+
+        @media (max-width: 1100px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        
+        .chart-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .chart-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .chart-header::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 20px;
+            background: var(--accent-color);
+            margin-left: 10px;
+            border-radius: 4px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-muted);
+            font-size: 13px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-title">
+            <h1>داشبورد تحلیلی منابع انسانی</h1>
+            <p>گزارش جامع وضعیت پرسنل بنیاد مسکن انقلاب اسلامی - ویژه ریاست محترم</p>
+        </div>
+        <div class="header-logo">
+            <span>بنیاد مسکن انقلاب اسلامی</span>
+        </div>
+    </div>
+
+    <div class="kpi-container">
+        <div class="kpi-card" style="border-right-color: #3498db;">
+            <div class="kpi-title">مجموع کارکنان</div>
+            <div class="kpi-value">۱۰,۸۶۵</div>
+            <div class="kpi-sub" style="color: #3498db;">نفر پرسنل فعال</div>
+        </div>
+        <div class="kpi-card" style="border-right-color: #2ecc71;">
+            <div class="kpi-title">ترکیب جنسیتی (مرد / زن)</div>
+            <div class="kpi-value">۹۵.۵٪ <span style="font-size: 18px; color: var(--text-muted);">/ ۴.۵٪</span></div>
+            <div class="kpi-sub">۱۰,۳۸۱ مرد | ۴۸۴ زن</div>
+        </div>
+        <div class="kpi-card" style="border-right-color: #9b59b6;">
+            <div class="kpi-title">پرسنل دارای تحصیلات عالی</div>
+            <div class="kpi-value">۶,۷۴۵</div>
+            <div class="kpi-sub" style="color: #9b59b6;">کارشناسی، ارشد و دکتری</div>
+        </div>
+        <div class="kpi-card" style="border-right-color: #e67e22;">
+            <div class="kpi-title">کارکنان متاهل</div>
+            <div class="kpi-value">۷,۶۶۵</div>
+            <div class="kpi-sub" style="color: #e67e22;">۷۰.۶٪ از کل پرسنل</div>
+        </div>
+    </div>
+
+    <div class="charts-grid">
+        
+        <div class="chart-card">
+            <div class="chart-header">توزیع کارکنان بر اساس بازه سنی</div>
+            <div class="chart-container">
+                <canvas id="ageChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-header">توزیع پرسنل بر اساس نوع استخدام</div>
+            <div class="chart-container">
+                <canvas id="empTypeChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-header">سطح تحصیلات کارکنان</div>
+            <div class="chart-container">
+                <canvas id="eduChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-header">سابقه خدمت پرسنل (سال)</div>
+            <div class="chart-container">
+                <canvas id="expChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card full-width">
+            <div class="chart-header">نرخ ورود و خروج پرسنل (روند ماهانه)</div>
+            <div class="chart-container" style="height: 350px;">
+                <canvas id="ioChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+    
+    <div class="footer">
+        تهیه شده برای ریاست محترم بنیاد مسکن انقلاب اسلامی | داده‌های مستخرج از سیستم جامع مدیریت منابع انسانی (HRM)
+    </div>
+
+    <script src="chart.umd.js"></script>
+    <script src="chartjs-plugin-datalabels.min.js"></script>
+
+    <script>
+        // تنظیمات پیش‌فرض برای چارت‌ها جهت پشتیبانی از فونت وزیرمتن
+        Chart.defaults.font.family = 'Vazirmatn';
+        Chart.defaults.color = '#555';
+        Chart.defaults.plugins.tooltip.titleFont.family = 'Vazirmatn';
+        Chart.defaults.plugins.tooltip.bodyFont.family = 'Vazirmatn';
+        
+        // ثبت افزونه دیتا لیبل
+        Chart.register(ChartDataLabels);
+
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { font: { size: 13, family: 'Vazirmatn' } } },
+                datalabels: {
+                    color: '#fff',
+                    font: { weight: 'bold', family: 'Vazirmatn' },
+                    formatter: (value) => {
+                        if(value > 100) return value.toLocaleString('fa-IR');
+                        return '';
+                    }
+                }
+            }
+        };
+
+        // 1. نمودار بازه سنی (Bar)
+        const ctxAge = document.getElementById('ageChart').getContext('2d');
+        new Chart(ctxAge, {
+            type: 'bar',
+            data: {
+                labels: ['زیر ۲۰', '۲۰ تا ۳۰', '۳۰ تا ۴۰', '۴۰ تا ۵۰', '۵۰ تا ۶۰', 'بالای ۶۰'],
+                datasets: [{
+                    label: 'تعداد کارکنان',
+                    data: [375, 1152, 2897, 4454, 1758, 229],
+                    backgroundColor: '#0f8e99',
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                ...commonOptions,
+                plugins: {
+                    ...commonOptions.plugins,
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#eee' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // 2. نمودار نوع استخدام (Horizontal Bar)
+        const ctxEmp = document.getElementById('empTypeChart').getContext('2d');
+        new Chart(ctxEmp, {
+            type: 'bar',
+            data: {
+                labels: ['ثابت', 'پروژه‌ای', 'مصوب', 'شرکتی', 'غیرمصوب', 'آزمایشی', 'مشمول وظیفه'],
+                datasets: [{
+                    label: 'تعداد',
+                    data: [3084, 1769, 1325, 1045, 943, 536, 516],
+                    backgroundColor: '#d4af37',
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                ...commonOptions,
+                plugins: {
+                    ...commonOptions.plugins,
+                    legend: { display: false },
+                    datalabels: { color: '#333', align: 'end', anchor: 'end' }
+                },
+                scales: {
+                    x: { beginAtZero: true, grid: { color: '#eee' } },
+                    y: { grid: { display: false } }
+                }
+            }
+        });
+
+        // 3. نمودار تحصیلات (Doughnut)
+        const ctxEdu = document.getElementById('eduChart').getContext('2d');
+        new Chart(ctxEdu, {
+            type: 'doughnut',
+            data: {
+                labels: ['زیر دیپلم/ابتدایی', 'دیپلم/سیکل', 'کاردانی', 'کارشناسی', 'کارشناسی ارشد', 'دکتری'],
+                datasets: [{
+                    data: [651, 1706, 560, 4554, 2140, 51],
+                    backgroundColor: ['#e74c3c', '#e67e22', '#f1c40f', '#3498db', '#9b59b6', '#2c3e50'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                ...commonOptions,
+                cutout: '65%',
+                plugins: {
+                    ...commonOptions.plugins,
+                    legend: { position: 'right' }
+                }
+            }
+        });
+
+        // 4. نمودار سابقه خدمت (Line/Area)
+        const ctxExp = document.getElementById('expChart').getContext('2d');
+        new Chart(ctxExp, {
+            type: 'line',
+            data: {
+                labels: ['کمتر از ۵', '۵ تا ۱۰', '۱۰ تا ۱۵', '۱۵ تا ۲۰', '۲۰ تا ۲۵', '۲۵ تا ۳۰', 'بالای ۳۰'],
+                datasets: [{
+                    label: 'تعداد پرسنل در این بازه',
+                    data: [4297, 969, 1032, 2172, 1406, 727, 84],
+                    borderColor: '#e74c3c',
+                    backgroundColor: 'rgba(231, 76, 60, 0.2)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 5,
+                    pointBackgroundColor: '#fff'
+                }]
+            },
+            options: {
+                ...commonOptions,
+                plugins: {
+                    ...commonOptions.plugins,
+                    datalabels: { display: false },
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // 5. روند ورود و خروج (Line - Multi Axis)
+        const ctxIO = document.getElementById('ioChart').getContext('2d');
+        new Chart(ctxIO, {
+            type: 'line',
+            data: {
+                labels: ['آبان ۱۴۰۲', 'آذر ۱۴۰۲', 'اسفند ۱۴۰۲', 'اردیبهشت ۱۴۰۳', 'تیر ۱۴۰۳', 'آبان ۱۴۰۳', 'آذر ۱۴۰۳'],
+                datasets: [
+                    {
+                        label: 'نرخ ورود',
+                        data: [682, 799, 759, 688, 842, 773, 846],
+                        borderColor: '#2ecc71',
+                        backgroundColor: '#2ecc71',
+                        borderWidth: 3,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'نرخ خروج',
+                        data: [610, 722, 688, 599, 710, 682, 755],
+                        borderColor: '#e74c3c',
+                        backgroundColor: '#e74c3c',
+                        borderWidth: 3,
+                        tension: 0.3
+                    }
+                ]
+            },
+            options: {
+                ...commonOptions,
+                plugins: {
+                    ...commonOptions.plugins,
+                    datalabels: { display: false },
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    y: { beginAtZero: false, min: 500 }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
